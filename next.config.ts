@@ -3,7 +3,7 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   // Fix for multiple lockfiles warning
-  outputFileTracingRoot: path.join(__dirname, "../"),
+  // outputFileTracingRoot: path.join(__dirname, "../"),
   
   // Allow build to continue with ESLint warnings
   eslint: {
