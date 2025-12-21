@@ -128,12 +128,24 @@ export interface RoomsPage {
     _id: string;
     heroTitle?: string;
     heroSubtitle?: string;
+    whyBookDirectTitle?: string;
+    whyBookDirectBenefits?: Array<{
+        icon: 'money' | 'star' | 'calendar' | 'gift' | 'diamond';
+        title: string;
+        description: string;
+    }>;
 }
 
 const roomsPageQuery = groq`*[_type == "roomsPage"][0] {
     _id,
     heroTitle,
-    heroSubtitle
+    heroSubtitle,
+    whyBookDirectTitle,
+    whyBookDirectBenefits[] {
+        icon,
+        title,
+        description
+    }
 }`;
 
 export async function getRoomsPage(): Promise<RoomsPage | null> {

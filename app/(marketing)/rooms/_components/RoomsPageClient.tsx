@@ -8,12 +8,48 @@ import type { Room } from "@/lib/rooms/sanity-queries";
 interface RoomsPageData {
     heroTitle?: string;
     heroSubtitle?: string;
+    whyBookDirectTitle?: string;
+    whyBookDirectBenefits?: Array<{
+        icon: 'money' | 'star' | 'calendar' | 'gift' | 'diamond';
+        title: string;
+        description: string;
+    }>;
 }
 
 interface RoomsPageClientProps {
     initialRooms: Room[];
     pageData?: RoomsPageData | null;
 }
+
+// Icon mapping helper
+const getIconSvg = (iconType: string) => {
+    switch (iconType) {
+        case 'money':
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            );
+        case 'star':
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            );
+        case 'calendar':
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            );
+        case 'gift':
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+            );
+        case 'diamond':
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            );
+        default:
+            return (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            );
+    }
+};
 
 export function RoomsPageClient({ initialRooms, pageData }: RoomsPageClientProps) {
     // No sorting needed - all rooms have the same fixed price (GHS 367)
@@ -97,36 +133,53 @@ export function RoomsPageClient({ initialRooms, pageData }: RoomsPageClientProps
                     className="mt-24 p-8 md:p-12 bg-gradient-to-br from-terracotta-50 to-ochre-50 rounded-3xl"
                 >
                     <h2 className="font-serif text-3xl md:text-4xl text-terracotta mb-6 text-center">
-                        Why Book Direct?
+                        {pageData?.whyBookDirectTitle || "Why Book Direct?"}
                     </h2>
                     <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
-                                <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <h3 className="font-semibold text-neutral-900 mb-2">Best Rate Guarantee</h3>
-                            <p className="text-sm text-neutral-600">Lowest prices available only through direct booking</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
-                                <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                </svg>
-                            </div>
-                            <h3 className="font-semibold text-neutral-900 mb-2">Exclusive Perks</h3>
-                            <p className="text-sm text-neutral-600">Complimentary welcome drinks and room upgrades</p>
-                        </div>
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
-                                <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <h3 className="font-semibold text-neutral-900 mb-2">Flexible Booking</h3>
-                            <p className="text-sm text-neutral-600">Free cancellation up to 48 hours before arrival</p>
-                        </div>
+                        {pageData?.whyBookDirectBenefits && pageData.whyBookDirectBenefits.length > 0 ? (
+                            pageData.whyBookDirectBenefits.map((benefit, index) => (
+                                <div key={index} className="text-center">
+                                    <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
+                                        <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            {getIconSvg(benefit.icon)}
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-neutral-900 mb-2">{benefit.title}</h3>
+                                    <p className="text-sm text-neutral-600">{benefit.description}</p>
+                                </div>
+                            ))
+                        ) : (
+                            // Default fallback benefits
+                            <>
+                                <div className="text-center">
+                                    <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
+                                        <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            {getIconSvg('money')}
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-neutral-900 mb-2">Best Rate Guarantee</h3>
+                                    <p className="text-sm text-neutral-600">Lowest prices available only through direct booking</p>
+                                </div>
+                                <div className="text-center">
+                                    <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
+                                        <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            {getIconSvg('star')}
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-neutral-900 mb-2">Exclusive Perks</h3>
+                                    <p className="text-sm text-neutral-600">Complimentary welcome drinks and room upgrades</p>
+                                </div>
+                                <div className="text-center">
+                                    <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mx-auto mb-4 shadow-soft">
+                                        <svg className="w-8 h-8 text-terracotta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            {getIconSvg('calendar')}
+                                        </svg>
+                                    </div>
+                                    <h3 className="font-semibold text-neutral-900 mb-2">Flexible Booking</h3>
+                                    <p className="text-sm text-neutral-600">Free cancellation up to 48 hours before arrival</p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </motion.div>
             </div>
