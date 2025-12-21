@@ -5,6 +5,18 @@ const nextConfig: NextConfig = {
   // Fix for multiple lockfiles warning
   outputFileTracingRoot: path.join(__dirname, "../"),
   
+  // Allow build to continue with ESLint warnings
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: false,
+  },
+  
+  typescript: {
+    // Only fail on type errors, not on warnings
+    ignoreBuildErrors: false,
+  },
+  
   images: {
     remotePatterns: [
       {
