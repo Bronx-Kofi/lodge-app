@@ -134,7 +134,7 @@ export default function TestResponsivePage() {
                     </h2>
                     <ol style={{ paddingLeft: '20px', lineHeight: '1.8' }}>
                         <li>Check the screen info above matches your device</li>
-                        <li>Click "Open Calendar" button</li>
+                        <li>Click &quot;Open Calendar&quot; button</li>
                         <li>Calendar should appear <strong>centered on screen</strong></li>
                         <li>Calendar should NOT be in bottom-right corner</li>
                         <li>Try selecting dates</li>

@@ -1,4 +1,12 @@
 {
   "extends": "next/core-web-vitals",
-  "root": true
+  "root": true,
+  "rules": {
+    "react/no-unescaped-entities": "error",
+    "react/no-children-prop": ["error", {
+      "allowFunctions": false
+    }],
+    "@next/next/no-img-element": "warn",
+    "react-hooks/exhaustive-deps": "warn"
+  }
 }

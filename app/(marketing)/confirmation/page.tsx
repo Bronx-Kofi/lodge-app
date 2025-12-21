@@ -206,7 +206,7 @@ function ConfirmationContent() {
               <div>
                 <div className="font-semibold text-dark mb-1">Save Your Booking Reference</div>
                 <div className="text-sm text-neutral-600">
-                  Please save <strong>{booking.bookingReference}</strong> - you'll need it to view your booking.
+                  Please save <strong>{booking.bookingReference}</strong> - you&apos;ll need it to view your booking.
                   We will contact you via WhatsApp at <strong>{booking.guestPhone}</strong> to confirm.
                 </div>
               </div>
@@ -231,7 +231,7 @@ function ConfirmationContent() {
               <div>
                 <h3 className="font-semibold text-dark mb-1">Save Your Booking Reference</h3>
                 <p className="text-sm text-neutral-600">
-                  Keep <strong>{booking.bookingReference}</strong> handy. You'll need it to view or manage your booking.
+                  Keep <strong>{booking.bookingReference}</strong> handy. You&apos;ll need it to view or manage your booking.
                 </p>
               </div>
             </div>
@@ -241,9 +241,9 @@ function ConfirmationContent() {
                 2
               </div>
               <div>
-                <h3 className="font-semibold text-dark mb-1">We'll Contact You</h3>
+                <h3 className="font-semibold text-dark mb-1">We&apos;ll Contact You</h3>
                 <p className="text-sm text-neutral-600">
-                  We'll reach out via WhatsApp to confirm your booking and provide check-in details.
+                  We&apos;ll reach out via WhatsApp to confirm your booking and provide check-in details.
                 </p>
               </div>
             </div>
@@ -255,7 +255,7 @@ function ConfirmationContent() {
               <div>
                 <h3 className="font-semibold text-dark mb-1">Contact Us</h3>
                 <p className="text-sm text-neutral-600">
-                  Have questions? Contact us via WhatsApp or email. We're here to help!
+                  Have questions? Contact us via WhatsApp or email. We&apos;re here to help!
                 </p>
               </div>
             </div>
