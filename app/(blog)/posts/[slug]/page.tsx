@@ -25,22 +25,24 @@ const postSlugs = defineQuery(
 );
 
 export async function generateStaticParams() {
-  return await sanityFetch({
-    query: postSlugs,
-    perspective: "published",
-    stega: false,
-  });
+  // return await sanityFetch({
+  //   query: postSlugs,
+  //   perspective: "published",
+  //   stega: false,
+  // });
+  return [];
 }
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const post = await sanityFetch({
-    query: postQuery,
-    params,
-    stega: false,
-  });
+  // const post = await sanityFetch({
+  //   query: postQuery,
+  //   params,
+  //   stega: false,
+  // });
+  const post = null as any;
   const previousImages = (await parent).openGraph?.images || [];
   const ogImage = resolveOpenGraphImage(post?.coverImage);
 
@@ -55,10 +57,11 @@ export async function generateMetadata(
 }
 
 export default async function PostPage({ params }: Props) {
-  const [post, settings] = await Promise.all([
-    sanityFetch({ query: postQuery, params }),
-    sanityFetch({ query: settingsQuery }),
-  ]);
+  // const [post, settings] = await Promise.all([
+  //   sanityFetch({ query: postQuery, params }),
+  //   sanityFetch({ query: settingsQuery }),
+  // ]);
+  const [post, settings] = [null, null] as [any, any];
 
   if (!post?._id) {
     return notFound();

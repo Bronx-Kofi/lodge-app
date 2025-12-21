@@ -19,11 +19,12 @@ import { settingsQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await sanityFetch({
-    query: settingsQuery,
-    // Metadata should never contain stega
-    stega: false,
-  });
+  // const settings = await sanityFetch({
+  //   query: settingsQuery,
+  //   // Metadata should never contain stega
+  //   stega: false,
+  // });
+  const settings = null as any;
   const title = settings?.title || demo.title;
   const description = settings?.description || demo.description;
 
@@ -60,7 +61,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await sanityFetch({ query: settingsQuery });
+  // const data = await sanityFetch({ query: settingsQuery });
+  const data = null as any;
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
 

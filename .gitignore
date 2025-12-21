@@ -44,3 +44,26 @@ next-env.d.ts
 # Env files created by scripts for working locally
 .env
 .env.local
+
+# Temporary files
+tmp_*
+*.log
+
+# Documentation (development notes - keep deployment docs)
+*_COMPLETE.md
+*_FIX*.md
+*_FIXED.md
+*_RESOLVED.md
+*_NOTE.md
+*_INFO.md
+DEBUG_*.md
+IMMEDIATE_*.md
+BRANDING_*.md
+CALENDAR_*.md
+PORTAL_*.md
+KINDLE_*.md
+SMALL_*.md
+FINAL_*.md
+HERO_*.md
+ROOM_DESCRIPTION_*.md
+DEV_INDICATOR_*.md

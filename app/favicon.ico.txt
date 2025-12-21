@@ -1,0 +1,11 @@
+# Favicon Removed
+
+The Next.js default favicon has been removed.
+
+To add your own favicon:
+
+1. Create or get your lodge favicon (16x16, 32x32, 48x48 px .ico file)
+2. Place it at: app/favicon.ico
+3. Or use the icon generation routes in app/icon.png/ and app/apple-icon.png/
+
+For now, the browser will use the generated icons from the route handlers.

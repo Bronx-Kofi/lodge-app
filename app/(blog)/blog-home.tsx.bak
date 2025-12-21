@@ -74,12 +74,13 @@ function HeroPost({
 }
 
 export default async function Page() {
-  const [settings, heroPost] = await Promise.all([
-    sanityFetch({
-      query: settingsQuery,
-    }),
-    sanityFetch({ query: heroQuery }),
-  ]);
+  const [settings, heroPost] = [null, null] as [any, any];
+  // await Promise.all([
+  //   sanityFetch({
+  //     query: settingsQuery,
+  //   }),
+  //   sanityFetch({ query: heroQuery }),
+  // ]);
 
   return (
     <div className="container mx-auto px-5">

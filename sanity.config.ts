@@ -1,89 +1,112 @@
 "use client";
 /**
- * This config is used to set up Sanity Studio that's mounted on the `app/(sanity)/studio/[[...tool]]/page.tsx` route
+ * Sanity Studio Configuration
+ * SIMPLIFIED - Removed visual editing to avoid configuration warnings
  */
 import { visionTool } from "@sanity/vision";
 import { PluginOptions, defineConfig } from "sanity";
 import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
-import {
-  presentationTool,
-  defineDocuments,
-  defineLocations,
-  type DocumentLocation,
-} from "sanity/presentation";
 import { structureTool } from "sanity/structure";
 
 import { apiVersion, dataset, projectId, studioUrl } from "@/sanity/lib/api";
-import { pageStructure, singletonPlugin } from "@/sanity/plugins/settings";
+import { singletonPlugin } from "@/sanity/plugins/settings";
 import { assistWithPresets } from "@/sanity/plugins/assist";
-import author from "@/sanity/schemas/documents/author";
-import post from "@/sanity/schemas/documents/post";
-import settings from "@/sanity/schemas/singletons/settings";
-import { resolveHref } from "@/sanity/lib/utils";
+import { deadSimpleCMS } from "@/sanity/structure/dead-simple";
 
-const homeLocation = {
-  title: "Home",
-  href: "/",
-} satisfies DocumentLocation;
+// Singleton Schemas
+import siteSettings from "@/sanity/schemas/singletons/site-settings";
+import navigation from "@/sanity/schemas/singletons/navigation";
+import footer from "@/sanity/schemas/singletons/footer";
+import homepage from "@/sanity/schemas/singletons/homepage";
+import roomsPage from "@/sanity/schemas/singletons/rooms-page";
+import explorePage from "@/sanity/schemas/singletons/explore-page";
+import aboutPage from "@/sanity/schemas/singletons/about-page";
+
+// Content Schemas
+import uiStrings from "@/sanity/schemas/documents/ui-strings";
+import serviceType from "@/sanity/schemas/documents/service-type";
+import roomUltraSimple from "@/sanity/schemas/documents/room-ultra-simple";
+
+// Booking System
+import booking from "@/sanity/schemas/documents/booking";
+import availability from "@/sanity/schemas/documents/availability";
+import pricingRule from "@/sanity/schemas/documents/pricing-rule";
+import review from "@/sanity/schemas/documents/review";
+
+// Other Documents
+import author from "@/sanity/schemas/documents/author";
+import { packageType } from "@/sanity/schemas/documents/package";
+import { heritageSite } from "@/sanity/schemas/documents/heritage-site";
+import eventHall from "@/sanity/schemas/documents/event-hall";
+import cateringService from "@/sanity/schemas/documents/catering-service";
+import galleryImage from "@/sanity/schemas/documents/gallery-image";
+import teamMember from "@/sanity/schemas/documents/team-member";
+import blogPost from "@/sanity/schemas/documents/blog-post";
+import faq from "@/sanity/schemas/documents/faq";
 
 export default defineConfig({
   basePath: studioUrl,
   projectId,
   dataset,
+  apiVersion: '2024-02-28', // Use stable API version
   schema: {
     types: [
       // Singletons
-      settings,
-      // Documents
-      post,
+      siteSettings,
+      navigation,
+      footer,
+      homepage,
+      roomsPage,
+      explorePage,
+      aboutPage,
+      uiStrings,
+      
+      // Property Documents
+      roomUltraSimple,
+      eventHall,
+      cateringService,
+      packageType,
+      
+      // Booking System
+      booking,
+      availability,
+      pricingRule,
+      review,
+      
+      // Content Documents
+      heritageSite,
+      blogPost,
       author,
+      serviceType,
+      
+      // Media & Other
+      galleryImage,
+      teamMember,
+      faq,
     ],
   },
   plugins: [
-    presentationTool({
-      resolve: {
-        mainDocuments: defineDocuments([
-          {
-            route: "/posts/:slug",
-            filter: `_type == "post" && slug.current == $slug`,
-          },
-        ]),
-        locations: {
-          settings: defineLocations({
-            locations: [homeLocation],
-            message: "This document is used on all pages",
-            tone: "caution",
-          }),
-          post: defineLocations({
-            select: {
-              title: "title",
-              slug: "slug.current",
-            },
-            resolve: (doc) => ({
-              locations: [
-                {
-                  title: doc?.title || "Untitled",
-                  href: resolveHref("post", doc?.slug)!,
-                },
-                homeLocation,
-              ],
-            }),
-          }),
-        },
-      },
-      previewUrl: { previewMode: { enable: "/api/draft-mode/enable" } },
+    // Main content editing tool
+    structureTool({ 
+      structure: deadSimpleCMS,
     }),
-    structureTool({ structure: pageStructure([settings]) }),
-    // Configures the global "new document" button, and document actions, to suit the Settings document singleton
-    singletonPlugin([settings.name]),
-    // Add an image asset source for Unsplash
+    // Singleton handling
+    singletonPlugin([
+      siteSettings.name,
+      navigation.name,
+      footer.name,
+      homepage.name,
+      roomsPage.name,
+      explorePage.name,
+      aboutPage.name,
+      uiStrings.name,
+    ]),
+    // Unsplash images
     unsplashImageAsset(),
-    // Sets up AI Assist with preset prompts
-    // https://www.sanity.io/docs/ai-assist
+    // AI Assist
     assistWithPresets(),
-    // Vision lets you query your content with GROQ in the studio
-    // https://www.sanity.io/docs/the-vision-plugin
+    // GROQ Vision (dev only)
     process.env.NODE_ENV === "development" &&
-      visionTool({ defaultApiVersion: apiVersion }),
+    visionTool({ defaultApiVersion: apiVersion }),
   ].filter(Boolean) as PluginOptions[],
 });

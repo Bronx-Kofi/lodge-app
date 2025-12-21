@@ -1,3 +1,188 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+    @apply antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Better text rendering with warm background + Mobile fixes */
+  body {
+    @apply text-dark bg-white-warm;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Fix for iOS Safari viewport height */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    /* Prevent text inflation on iOS */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  /* Better touch scrolling on iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Improved heading styles */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif text-dark;
+    text-wrap: balance;
+  }
+
+  /* Better paragraph spacing */
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-orange/20 text-dark;
+  }
+}
+
+@layer components {
+
+  /* Premium button styles - Orange Primary - BOLD */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 bg-orange text-white rounded-full font-bold text-lg transition-all duration-300;
+    @apply hover:bg-orange-600 hover:shadow-glow hover:scale-105 active:scale-95;
+    @apply shadow-brand-lg;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-orange border-2 border-orange rounded-full font-medium transition-all duration-300;
+    @apply hover:bg-orange hover:text-white hover:shadow-brand-lg hover:scale-105 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent text-dark rounded-full font-medium transition-all duration-300;
+    @apply hover:bg-orange-50 hover:text-orange active:scale-95;
+  }
+
+  /* Premium card styles with subtle orange accent */
+  .card-elevated {
+    @apply bg-white rounded-2xl shadow-md transition-all duration-300;
+    @apply hover:shadow-2xl hover:-translate-y-1;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl;
+    @apply transition-all duration-300 hover:shadow-brand;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  }
+
+  /* Gradient overlays - Updated for orange theme */
+  .gradient-overlay-dark {
+    @apply absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent;
+  }
+
+  .gradient-overlay-brand {
+    @apply absolute inset-0 bg-gradient-to-br from-orange/80 via-orange-400/60 to-coral/50;
+  }
+
+  .gradient-overlay-warm {
+    @apply absolute inset-0 bg-gradient-to-br from-orange/20 via-transparent to-coral/10;
+  }
+
+  /* Decorative divider */
+  .divider-brand {
+    @apply w-24 h-1 bg-gradient-to-r from-orange to-orange-400 mx-auto;
+  }
+
+  /* Text gradient effect */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange to-orange-600;
+  }
+}
+
+@layer utilities {
+
+  /* Text balance utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  
+  /* Touch-friendly utilities */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-target-comfortable {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Fluid typography */
+  .heading-hero {
+    font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  
+  .heading-section {
+    font-size: clamp(2rem, 4vw + 1rem, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  
+  .text-body-lg {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.6;
+  }
+
+  /* Custom shadows with orange glow */
+  .shadow-brand {
+    box-shadow: 0 10px 40px -10px rgba(255, 107, 53, 0.25);
+  }
+
+  .shadow-brand-lg {
+    box-shadow: 0 20px 60px -15px rgba(255, 107, 53, 0.35);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 40px rgba(255, 107, 53, 0.4);
+  }
+
+  /* Hover glow effect */
+  .hover-glow {
+    @apply transition-shadow duration-300;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+  }
+}
