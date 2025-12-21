@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SimpleDatePickerProps {
     onSelect: (range: { from: Date; to?: Date } | undefined) => void;
-    selected?: { from: Date; to?: Date };
+    selected?: { from?: Date; to?: Date };
 }
 
 export function SimpleDatePicker({ onSelect, selected }: SimpleDatePickerProps) {
