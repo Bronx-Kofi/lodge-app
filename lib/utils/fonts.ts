@@ -15,12 +15,16 @@ export const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["Georgia", "serif"],
+  adjustFontFallback: true,
 });
 
 // Modern Sans: Poppins + Inter
@@ -29,6 +33,8 @@ export const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 // Professional: Montserrat + Open Sans
@@ -36,12 +42,16 @@ export const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export const openSans = Open_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 // Classic Serif: Merriweather + Lato
@@ -50,6 +60,8 @@ export const merriweather = Merriweather({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["Georgia", "serif"],
+  adjustFontFallback: true,
 });
 
 export const lato = Lato({
@@ -57,6 +69,8 @@ export const lato = Lato({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 // Friendly Rounded: Nunito + Work Sans
@@ -64,12 +78,16 @@ export const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export const workSans = Work_Sans({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export type FontPairing = 'playfair-inter' | 'poppins-inter' | 'montserrat-opensans' | 'merriweather-lato' | 'nunito-worksans';

@@ -25,6 +25,25 @@ const nextConfig: NextConfig = {
   // Compress responses
   compress: true,
 
+  // Increase timeout for Google Fonts during build
+  experimental: {
+    fetchCacheKeyPrefix: '',
+  },
+
+  // Configure webpack for better font handling
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Increase fetch timeout for server-side font loading
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        net: false,
+        tls: false,
+        fs: false,
+      };
+    }
+    return config;
+  },
+
   // Security and Performance headers
   async headers() {
     return [

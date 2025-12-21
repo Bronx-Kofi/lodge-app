@@ -54,6 +54,8 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export default async function RootLayout({

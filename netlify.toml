@@ -8,6 +8,10 @@
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  NEXT_TELEMETRY_DISABLED = "1"
+  # Increase network timeouts for Google Fonts
+  NETLIFY_BUILD_TIMEOUT = "30"
 
 # Redirect rules for Next.js
 [[redirects]]
