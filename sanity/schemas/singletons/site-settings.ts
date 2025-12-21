@@ -166,7 +166,7 @@ export default defineType({
       type: "string",
       description: "Hyperlink color. Leave empty to use primary color. Default: Same as primary",
       placeholder: "#FF6B35",
-      validation: (Rule) => Rule.optional().regex(/^#[0-9A-Fa-f]{6}$/, {
+      validation: (Rule) => Rule.regex(/^#[0-9A-Fa-f]{6}$/, {
         name: "hex color",
         invert: false,
       }).error("Must be a valid hex color (e.g., #FF6B35)"),
