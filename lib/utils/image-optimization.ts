@@ -32,7 +32,7 @@ export function getOptimizedImageUrl(
     let urlBuilder = builder.image(source).auto('format').fit('max');
     
     if (config.width) urlBuilder = urlBuilder.width(config.width);
-    if (config.height) urlBuilder = urlBuilder.height(config.height);
+    if ('height' in config && config.height) urlBuilder = urlBuilder.height(config.height);
     if (config.quality) urlBuilder = urlBuilder.quality(config.quality);
     if (config.format) urlBuilder = urlBuilder.format(config.format as any);
     
