@@ -81,29 +81,24 @@ export default defineType({
       options: {
         list: [
           { 
-            title: "Elegant Serif (Current - Playfair + Inter)", 
-            value: "playfair-inter",
-            description: "Classic and sophisticated"
+            title: "Elegant Serif (Current - Playfair + Inter) - Classic and sophisticated", 
+            value: "playfair-inter"
           },
           { 
-            title: "Modern Sans (Poppins + Inter)", 
-            value: "poppins-inter",
-            description: "Clean and contemporary"
+            title: "Modern Sans (Poppins + Inter) - Clean and contemporary", 
+            value: "poppins-inter"
           },
           { 
-            title: "Professional (Montserrat + Open Sans)", 
-            value: "montserrat-opensans",
-            description: "Business-friendly and readable"
+            title: "Professional (Montserrat + Open Sans) - Business-friendly and readable", 
+            value: "montserrat-opensans"
           },
           { 
-            title: "Classic Serif (Merriweather + Lato)", 
-            value: "merriweather-lato",
-            description: "Traditional and trustworthy"
+            title: "Classic Serif (Merriweather + Lato) - Traditional and trustworthy", 
+            value: "merriweather-lato"
           },
           { 
-            title: "Friendly Rounded (Nunito + Work Sans)", 
-            value: "nunito-worksans",
-            description: "Warm and approachable"
+            title: "Friendly Rounded (Nunito + Work Sans) - Warm and approachable", 
+            value: "nunito-worksans"
           },
         ],
         layout: "radio",
