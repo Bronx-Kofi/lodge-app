@@ -161,7 +161,6 @@ export function BookingWidget({ room }: BookingWidgetProps) {
 
         {/* Guest Selection */}
         <div>
-          {/* eslint-disable-next-line react/no-children-prop */}
           <GuestSelector
             adults={adults}
             children={children}

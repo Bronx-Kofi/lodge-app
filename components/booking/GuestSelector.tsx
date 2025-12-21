@@ -10,12 +10,12 @@ interface GuestSelectorProps {
 
 export function GuestSelector({
   adults,
-  children,
+  children: childrenCount,
   onAdultsChange,
   onChildrenChange,
   maxGuests,
 }: GuestSelectorProps) {
-  const totalGuests = adults + children;
+  const totalGuests = adults + childrenCount;
 
   return (
     <div className="border border-neutral-200 rounded-xl p-4 space-y-4 bg-white">
@@ -59,17 +59,17 @@ export function GuestSelector({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => onChildrenChange(Math.max(0, children - 1))}
-            disabled={children <= 0}
+            onClick={() => onChildrenChange(Math.max(0, childrenCount - 1))}
+            disabled={childrenCount <= 0}
             className="w-9 h-9 rounded-full border-2 border-neutral-300 hover:border-orange disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-lg font-semibold"
             aria-label="Decrease children"
           >
             −
           </button>
-          <span className="w-8 text-center font-semibold">{children}</span>
+          <span className="w-8 text-center font-semibold">{childrenCount}</span>
           <button
             type="button"
-            onClick={() => onChildrenChange(Math.min(maxGuests - adults, children + 1))}
+            onClick={() => onChildrenChange(Math.min(maxGuests - adults, childrenCount + 1))}
             disabled={totalGuests >= maxGuests}
             className="w-9 h-9 rounded-full border-2 border-neutral-300 hover:border-orange disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center text-lg font-semibold"
             aria-label="Increase children"

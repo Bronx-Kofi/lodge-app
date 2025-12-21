@@ -221,7 +221,7 @@ function ConfirmationContent() {
           transition={{ delay: 0.4 }}
           className="bg-white rounded-2xl shadow-lg p-8 mb-6"
         >
-          <h2 className="text-2xl font-bold text-dark mb-6">What's Next?</h2>
+          <h2 className="text-2xl font-bold text-dark mb-6">What&apos;s Next?</h2>
 
           <div className="space-y-4">
             <div className="flex gap-4">
