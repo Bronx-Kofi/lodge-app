@@ -1,0 +1,42 @@
+# Environment Variables for Vercel Deployment
+# Copy these EXACTLY into Vercel Dashboard
+
+# ============================================
+# SANITY CMS CONFIGURATION
+# ============================================
+
+NEXT_PUBLIC_SANITY_PROJECT_ID=jyrzp1q7
+
+NEXT_PUBLIC_SANITY_DATASET=production
+
+SANITY_API_READ_TOKEN=skRVYN2fHR1CxeJQ2O69MZYJz1JBRRiE8MiGHO3HIXC4rTDSo45T6SBHbWc4hnDR89gvHPrL6WDjcdFDaQY90iWzEXv4cg8RYYOwcD1nkOsPdIJXCsCtcyZHnz5Sp8RtK7gxDjjDy5NYVwGpFWe0pWIDZdx2EaOeTTT0DzJwpKpIcWuZjpqw
+
+SANITY_API_TOKEN=sk8Ogt47TJ3lnOjKBbkr3CJqv26wfLwXWMG3tu4Q2Iwhipaxh9nbQE0kdwJhiNqirEWD98knLth4kkla7nsZLh3T65LRwLKonOBBOCxDAlmp2zdLjtQlI4cTGzYKgfEKhJf8oOsViDMy19V8Fi46CsnvNoIW4tSZclAG2JFNdkoDrYKtfFAF
+
+# ============================================
+# EMAIL SERVICE (Optional - for automatic emails)
+# ============================================
+
+# RESEND_API_KEY=your_resend_api_key_here
+# Uncomment and add this if you set up Resend for email confirmations
+
+
+# ============================================
+# INSTRUCTIONS FOR VERCEL
+# ============================================
+
+How to add these in Vercel:
+
+1. Go to your project in Vercel
+2. Click "Settings" → "Environment Variables"
+3. For each variable above:
+   - Click "Add New"
+   - Name: (copy the name, e.g., NEXT_PUBLIC_SANITY_PROJECT_ID)
+   - Value: (copy the value after the = sign)
+   - Environment: Select ALL (Production, Preview, Development)
+   - Click "Save"
+
+4. After adding all variables, go to "Deployments"
+5. Click "..." on latest deployment → "Redeploy"
+6. Your site will work!
+
