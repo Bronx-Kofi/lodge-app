@@ -144,11 +144,48 @@ function CheckInConfirmationContent() {
           </div>
         </motion.div>
 
+        {/* Visa Receipt Section */}
+        {reference && email && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mb-6"
+          >
+            <div className="flex gap-4 items-start">
+              <div className="text-4xl">🛂</div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-dark mb-2">
+                  Need a Visa Application Receipt?
+                </h3>
+                <p className="text-sm text-neutral-700 mb-4">
+                  Download your embassy-compliant booking confirmation for visa applications. 
+                  Accepted by embassies worldwide including Schengen, US, UK, Canada, and Australia.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link
+                    href={`/receipt?reference=${reference}&email=${encodeURIComponent(email)}`}
+                    className="btn-secondary text-center"
+                  >
+                    📄 View Standard Receipt
+                  </Link>
+                  <Link
+                    href={`/receipt/visa?reference=${reference}&email=${encodeURIComponent(email)}`}
+                    className="btn-primary text-center"
+                  >
+                    🛂 Get Visa Application Receipt
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4"
         >
           <Link href="/" className="btn-secondary flex-1 text-center">
