@@ -464,25 +464,30 @@ function VisaReceiptContent() {
               </div>
               <div className="mt-6 pt-6 border-t border-neutral-300">
                 <div className="text-sm text-neutral-600 font-semibold mb-4">Official Seal</div>
-                <div className="inline-flex items-center justify-center rounded-full border-2 border-neutral-800/80 p-1 max-w-full">
-                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-800/60 px-4 py-3 sm:px-5 sm:py-4 max-w-full">
-                    <div className="text-center">
-                      <div className="text-[11px] tracking-[0.25em] text-neutral-700 uppercase">
+
+                {/* Fixed-size seal for consistent, professional proportions */}
+                <div className="inline-flex items-center justify-center rounded-full border border-neutral-900/70 w-[220px] h-[220px] sm:w-[240px] sm:h-[240px] bg-white">
+                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-900/60 w-[206px] h-[206px] sm:w-[226px] sm:h-[226px]">
+                    <div className="text-center px-4">
+                      <div className="text-[10px] tracking-[0.22em] text-neutral-700 uppercase">
                         {siteSettings?.title || 'Miky Hillside Lodge'}
                       </div>
-                      <div className="mt-2 text-xs font-semibold text-neutral-900 tracking-wide uppercase">
+
+                      <div className="mt-2 text-[11px] font-semibold text-neutral-900 tracking-[0.12em] uppercase">
                         Reservation Confirmation
                       </div>
-                      <div className="mt-2 text-[11px] text-neutral-700">
+
+                      <div className="mt-2 text-[10px] text-neutral-700 truncate max-w-[190px] mx-auto">
                         {siteSettings?.address || 'Dumasua, Sunyani, Ghana'}
                       </div>
-                      <div className="mt-4 text-[11px] text-neutral-700">
+
+                      <div className="mt-4 text-[10px] text-neutral-700 uppercase tracking-[0.18em]">
                         Authorized Signature
                       </div>
 
-                      {/* Signature image */}
-                      <div className="mt-3 flex items-center justify-center">
-                        <div className="relative w-56 h-20">
+                      {/* Signature image (bigger, clearer) */}
+                      <div className="mt-2 flex items-center justify-center">
+                        <div className="relative w-56 h-14">
                           <Image
                             src="/sig.png"
                             alt="Authorized signature"
@@ -493,9 +498,9 @@ function VisaReceiptContent() {
                         </div>
                       </div>
 
-                      <div className="mt-2 h-px w-44 bg-neutral-800/50 mx-auto" />
+                      <div className="mt-2 h-px w-56 bg-neutral-900/50 mx-auto" />
 
-                      <div className="mt-2 text-[10px] tracking-[0.2em] text-neutral-600 uppercase">
+                      <div className="mt-2 text-[10px] tracking-[0.18em] text-neutral-700 uppercase">
                         Date: {formatDate(issueDate)}
                       </div>
                     </div>
