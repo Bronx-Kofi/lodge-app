@@ -68,7 +68,7 @@ function CheckInConfirmationContent() {
               <div>
                 <h3 className="font-semibold text-dark mb-1">Form Received</h3>
                 <p className="text-sm text-neutral-600">
-                  We've received your check-in information and our team is reviewing it
+                  We&apos;ve received your check-in information and our team is reviewing it
                 </p>
               </div>
             </div>
@@ -78,7 +78,7 @@ function CheckInConfirmationContent() {
                 2
               </div>
               <div>
-                <h3 className="font-semibold text-dark mb-1">What's Next?</h3>
+                <h3 className="font-semibold text-dark mb-1">What&apos;s Next?</h3>
                 <p className="text-sm text-neutral-600">
                   Our team will review your information and contact you via WhatsApp or phone to confirm your booking details
                 </p>
@@ -135,7 +135,7 @@ function CheckInConfirmationContent() {
             </div>
             <div className="flex gap-2">
               <span className="text-orange font-bold">•</span>
-              <span>We'll contact you if we need any additional information</span>
+              <span>We&apos;ll contact you if we need any additional information</span>
             </div>
             <div className="flex gap-2">
               <span className="text-orange font-bold">•</span>

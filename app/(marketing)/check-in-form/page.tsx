@@ -274,7 +274,7 @@ export default function CheckInFormPage() {
                   placeholder="MHL-123456"
                 />
                 <p className="text-xs text-neutral-500 mt-1">
-                  If you booked via WhatsApp, we'll provide this to you
+                  If you booked via WhatsApp, we&apos;ll provide this to you
                 </p>
               </div>
 
@@ -394,7 +394,7 @@ export default function CheckInFormPage() {
                   <div>
                     <span className="font-medium text-dark">I need airport/station pickup</span>
                     <p className="text-sm text-neutral-600 mt-1">
-                      We'll contact you to arrange transportation (additional charges may apply)
+                      We&apos;ll contact you to arrange transportation (additional charges may apply)
                     </p>
                   </div>
                 </label>
@@ -473,7 +473,7 @@ export default function CheckInFormPage() {
               <div>
                 <span className="font-bold text-dark text-lg">I need an official receipt for visa purposes</span>
                 <p className="text-sm text-neutral-700 mt-1">
-                  We'll generate a professional, embassy-ready receipt with your passport and nationality information
+                  We&apos;ll generate a professional, embassy-ready receipt with your passport and nationality information
                 </p>
               </div>
             </label>
