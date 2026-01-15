@@ -339,7 +339,7 @@ function CheckoutContent() {
                       <ol className="space-y-3 text-sm text-neutral-700">
                         <li className="flex gap-3">
                           <span className="font-bold text-orange">1.</span>
-                          <span>Click "Confirm Booking" to reserve your room</span>
+                          <span>Click &quot;Confirm Booking&quot; to reserve your room</span>
                         </li>
                         <li className="flex gap-3">
                           <span className="font-bold text-orange">2.</span>
@@ -367,7 +367,7 @@ function CheckoutContent() {
                         </svg>
                         <div className="text-sm text-green-800">
                           <p className="font-semibold mb-1">Your booking is secure</p>
-                          <p>After completing payment, you'll receive an official receipt suitable for visa applications and expense reports.</p>
+                          <p>After completing payment, you&apos;ll receive an official receipt suitable for visa applications and expense reports.</p>
                         </div>
                       </div>
                     </div>
