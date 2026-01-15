@@ -170,7 +170,6 @@ export default defineType({
       fields: [
         { name: 'dateOfBirth', title: 'Date of Birth', type: 'date' },
         { name: 'roomPreference', title: 'Room Preference', type: 'string' },
-        { name: 'dietaryRestrictions', title: 'Dietary Restrictions', type: 'string' },
         { name: 'arrivalTime', title: 'Arrival Time', type: 'string' },
         { name: 'needsPickup', title: 'Needs Pickup', type: 'boolean' },
         { name: 'emergencyContactName', title: 'Emergency Contact Name', type: 'string' },

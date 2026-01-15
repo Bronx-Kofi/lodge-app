@@ -29,7 +29,6 @@ export default function CheckInFormPage() {
     
     // Additional Information
     specialRequests: '',
-    dietaryRestrictions: '',
     arrivalTime: '',
     needsPickup: false,
     
@@ -367,19 +366,6 @@ export default function CheckInFormPage() {
                   className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none resize-none"
                   rows={4}
                   placeholder="Any special accommodations, preferences, or requests..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-dark mb-2">
-                  Dietary Restrictions or Allergies
-                </label>
-                <input
-                  type="text"
-                  value={formData.dietaryRestrictions}
-                  onChange={(e) => setFormData({ ...formData, dietaryRestrictions: e.target.value })}
-                  className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none"
-                  placeholder="e.g., Vegetarian, Nut allergy"
                 />
               </div>
 

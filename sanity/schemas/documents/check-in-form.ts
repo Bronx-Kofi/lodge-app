@@ -111,11 +111,6 @@ export default defineType({
       rows: 3,
     }),
     defineField({
-      name: 'dietaryRestrictions',
-      title: 'Dietary Restrictions',
-      type: 'string',
-    }),
-    defineField({
       name: 'arrivalTime',
       title: 'Expected Arrival Time',
       type: 'string',

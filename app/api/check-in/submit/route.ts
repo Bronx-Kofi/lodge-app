@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
       numberOfGuests,
       roomPreference,
       specialRequests,
-      dietaryRestrictions,
       arrivalTime,
       needsPickup,
       emergencyContactName,
@@ -70,7 +69,6 @@ export async function POST(request: NextRequest) {
               checkInFormData: {
                 dateOfBirth,
                 roomPreference,
-                dietaryRestrictions,
                 arrivalTime,
                 needsPickup,
                 emergencyContactName,
@@ -112,7 +110,6 @@ export async function POST(request: NextRequest) {
       numberOfGuests: numberOfGuests || 1,
       roomPreference: roomPreference || '',
       specialRequests: specialRequests || '',
-      dietaryRestrictions: dietaryRestrictions || '',
       arrivalTime: arrivalTime || '',
       needsPickup: needsPickup || false,
       emergencyContactName: emergencyContactName || '',
