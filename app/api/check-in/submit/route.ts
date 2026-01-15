@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from 'next-sanity';
-import { apiVersion, dataset, projectId } from '@/sanity/lib/api';
 
-// Create a client with write permissions
+// Create a client with write permissions using environment variables directly
 const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  apiVersion: '2024-02-28',
   useCdn: false, // Don't use CDN for mutations
   token: process.env.SANITY_API_TOKEN, // Write token from environment
+});
+
+// Log configuration (without exposing token)
+console.log('[Check-In API] Sanity Config:', {
+  projectId: client.config().projectId,
+  dataset: client.config().dataset,
+  hasToken: !!client.config().token,
+  tokenLength: client.config().token?.length || 0,
 });
 
 // Generate unique check-in form reference
@@ -20,8 +27,15 @@ function generateCheckInReference(): string {
 }
 
 export async function POST(request: NextRequest) {
+  console.log('[Check-In API] Request received');
+  
   try {
     const formData = await request.json();
+    console.log('[Check-In API] Form data parsed:', {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+    });
 
     const {
       firstName,
@@ -102,6 +116,8 @@ export async function POST(request: NextRequest) {
 
     // If no booking reference or booking not found, create new check-in submission
     const checkInReference = generateCheckInReference();
+    
+    console.log('[Check-In API] Creating check-in form document:', checkInReference);
 
     const checkInSubmission = await client.create({
       _type: 'checkInForm',
@@ -137,9 +153,16 @@ export async function POST(request: NextRequest) {
       message: 'Check-in form submitted successfully',
     });
   } catch (error) {
-    console.error('Error submitting check-in form:', error);
+    console.error('[Check-In API] DETAILED ERROR:', error);
+    console.error('[Check-In API] Error name:', (error as Error).name);
+    console.error('[Check-In API] Error message:', (error as Error).message);
+    console.error('[Check-In API] Error stack:', (error as Error).stack);
+    
     return NextResponse.json(
-      { error: 'Failed to submit check-in form' },
+      { 
+        error: 'Failed to submit check-in form',
+        details: (error as Error).message 
+      },
       { status: 500 }
     );
   }
