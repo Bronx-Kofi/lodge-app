@@ -217,7 +217,7 @@ function ReceiptDownloadContent() {
               <h4 className="font-semibold text-dark mb-2">Download Instructions</h4>
               <ul className="space-y-1 text-sm text-neutral-700">
                 <li>• Both receipts can be printed or saved as PDF</li>
-                <li>• Use the Print function in your browser and select "Save as PDF"</li>
+                <li>• Use the Print function in your browser and select &quot;Save as PDF&quot;</li>
                 <li>• For visa applications, embassies may verify your booking by contacting us directly</li>
               </ul>
             </div>
