@@ -145,6 +145,23 @@ export function generateBookingConfirmationEmail(data: BookingConfirmationData):
                 </ol>
               </div>
 
+              <!-- Receipt Download -->
+              <div style="background-color: #eff6ff; border-radius: 8px; padding: 20px; margin: 25px 0; text-align: center;">
+                <h3 style="margin: 0 0 15px; color: #1e40af; font-size: 16px;">
+                  📄 Your Official Receipt
+                </h3>
+                <p style="margin: 0 0 20px; color: #1e3a8a; font-size: 14px; line-height: 1.6;">
+                  Download your professional booking receipt for visa applications, expense reports, or your records.
+                </p>
+                <a href="https://mikyhillsidelodge.com/receipt?reference=${checkInReference}&email=${encodeURIComponent(data.guestEmail)}" 
+                   style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                  View & Download Receipt
+                </a>
+                <p style="margin: 15px 0 0; color: #6b7280; font-size: 12px;">
+                  Perfect for visa applications and embassy submissions
+                </p>
+              </div>
+
               <!-- Contact Information -->
               <div style="background-color: #fff7ed; border-radius: 8px; padding: 20px; margin: 25px 0;">
                 <h3 style="margin: 0 0 15px; color: #c2410c; font-size: 16px;">

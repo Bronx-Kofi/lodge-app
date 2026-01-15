@@ -40,7 +40,7 @@ function CheckInConfirmationContent() {
             </svg>
           </motion.div>
 
-          <h1 className="text-4xl font-bold text-dark mb-3">Check-In Form Submitted! ✅</h1>
+          <h1 className="text-4xl font-bold text-dark mb-3">Booking Confirmed</h1>
           <p className="text-xl text-neutral-600">
             Thank you for completing your pre-check-in information
           </p>

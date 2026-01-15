@@ -146,19 +146,35 @@ export async function POST(request: NextRequest) {
       submittedAt: new Date().toISOString(),
     });
 
-    // TODO: Send email confirmation
-    // You can integrate with Resend, SendGrid, or other email service here
-    // Example: await sendEmail(email, generateBookingConfirmationEmail({...}))
-    
-    console.log('[Check-In API] Email should be sent to:', email);
-    console.log('[Check-In API] Reference:', checkInReference);
+    // Send confirmation email with receipt link
+    try {
+      const { sendConfirmationEmail } = await import('@/lib/email/send-confirmation');
+      
+      const emailResult = await sendConfirmationEmail({
+        guestName: `${firstName} ${lastName}`,
+        guestEmail: email,
+        checkInReference,
+        checkInDate,
+        checkOutDate,
+        numberOfGuests: numberOfGuests || 1,
+        roomPreference: roomPreference || undefined,
+      });
+
+      if (emailResult.success) {
+        console.log('[Check-In API] Email sent successfully to:', email);
+      } else {
+        console.log('[Check-In API] Email not sent (service not configured or error)');
+      }
+    } catch (emailError) {
+      console.error('[Check-In API] Email error:', emailError);
+      // Don't fail the booking if email fails
+    }
 
     return NextResponse.json({
       success: true,
       checkInReference,
       bookingReference: bookingReference || checkInReference,
       message: 'Check-in form submitted successfully',
-      emailNote: 'Confirmation will be sent to your email shortly',
     });
   } catch (error) {
     console.error('[Check-In API] DETAILED ERROR:', error);
