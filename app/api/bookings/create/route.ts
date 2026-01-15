@@ -24,6 +24,8 @@ export async function POST(request: NextRequest) {
       children,
       specialRequests,
       totalPrice,
+      nationality,
+      passportNumber,
     } = bookingData;
 
     // Validate required fields
@@ -75,9 +77,12 @@ export async function POST(request: NextRequest) {
       status: 'pending',
       paymentStatus: 'pending',
       specialRequests: specialRequests || '',
+      nationality: nationality || '',
+      passportNumber: passportNumber || '',
       createdAt: new Date().toISOString(),
       confirmationSent: false,
       reminderSent: false,
+      receiptIssued: false,
     });
 
     // Create availability blocks for booked dates

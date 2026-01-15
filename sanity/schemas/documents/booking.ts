@@ -129,6 +129,39 @@ export default defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    defineField({
+      name: 'nationality',
+      title: 'Guest Nationality',
+      type: 'string',
+      description: 'Guest country (for visa receipts)',
+    }),
+    defineField({
+      name: 'passportNumber',
+      title: 'Passport Number',
+      type: 'string',
+      description: 'Optional: For international guests requiring visa documentation',
+    }),
+    defineField({
+      name: 'receiptNumber',
+      title: 'Receipt Number',
+      type: 'string',
+      description: 'Unique receipt identifier for accounting',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'receiptIssued',
+      title: 'Receipt Issued',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Whether a formal receipt has been generated',
+    }),
+    defineField({
+      name: 'receiptIssuedAt',
+      title: 'Receipt Issued Date',
+      type: 'datetime',
+      description: 'When the receipt was first generated',
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {

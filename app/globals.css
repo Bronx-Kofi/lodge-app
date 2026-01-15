@@ -186,3 +186,82 @@
     box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
   }
 }
+
+/* Print Styles for Professional Receipt */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide navigation and other UI elements */
+  nav,
+  header,
+  footer:not(.print\\:block),
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  /* Ensure receipt takes full page */
+  .print\\:p-6 {
+    padding: 1.5rem !important;
+  }
+
+  .print\\:p-4 {
+    padding: 1rem !important;
+  }
+
+  .print\\:bg-white {
+    background-color: white !important;
+  }
+
+  .print\\:py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .print\\:px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  /* Prevent page breaks inside important sections */
+  .print\\:break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure colors print correctly */
+  .bg-orange-50,
+  .bg-orange,
+  .text-orange,
+  .border-orange,
+  .bg-green-100,
+  .text-green-700,
+  .bg-neutral-50,
+  .bg-dark {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Make sure all backgrounds and colors print */
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Remove margins that might cause extra pages */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
