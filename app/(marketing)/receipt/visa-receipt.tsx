@@ -110,42 +110,68 @@ function VisaReceiptContent() {
 
   return (
     <div className="min-h-screen bg-neutral-100 py-8 print:bg-white print:py-0">
-      {/* Action Buttons - Hidden on print */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-6 print:hidden">
-        <div className="bg-white rounded-lg shadow-sm p-4">
-          {/* Mobile: Stack everything vertically */}
-          <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
-            <div className="flex-1">
-              <h2 className="font-semibold text-dark text-base sm:text-lg">Hotel Booking Confirmation for Visa Application</h2>
-              <p className="text-xs sm:text-sm text-neutral-600 mt-1">Reference: {booking.bookingReference}</p>
-            </div>
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
-              <button
-                onClick={handleDownloadPDF}
-                className="btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-2.5"
-              >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download PDF
-              </button>
-              <button
-                onClick={handlePrint}
-                className="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-2.5"
-              >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                Print
-              </button>
+      {/* Action Bar - Hidden on print */}
+      <div className="print:hidden sticky top-[72px] sm:top-[80px] z-40 bg-neutral-100/90 backdrop-blur">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3">
+          <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-4">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+              <div className="flex-1">
+                <h2 className="font-semibold text-dark text-base sm:text-lg">
+                  Hotel Booking Confirmation for Visa Application
+                </h2>
+                <p className="text-xs sm:text-sm text-neutral-600 mt-1">
+                  Reference: {booking.bookingReference}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full md:w-auto md:flex md:flex-row md:gap-3">
+                <button
+                  onClick={handleDownloadPDF}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-orange px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+                >
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Download PDF
+                </button>
+
+                <button
+                  onClick={handlePrint}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-800 shadow-sm hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400"
+                >
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                    />
+                  </svg>
+                  Print
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Visa Confirmation Document */}
-      <div className="max-w-4xl mx-auto px-6 print:px-0" ref={receiptRef}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 print:px-0" ref={receiptRef}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -378,44 +404,33 @@ function VisaReceiptContent() {
                 </div>
               </div>
               <div className="mt-6 pt-6 border-t border-neutral-300">
-                <div className="text-sm text-neutral-500 mb-4">Official Lodge Stamp/Seal:</div>
-                <div className="inline-block border-2 border-orange px-8 py-6 rounded">
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-orange">{siteSettings?.title || 'MIKY HILLSIDE LODGE'}</div>
-                    <div className="text-xs text-neutral-600 mt-1">SUNYANI, GHANA</div>
-                    <div className="text-xs text-neutral-500 mt-2">Official Confirmation</div>
+                <div className="text-sm text-neutral-600 font-semibold mb-4">Official Seal</div>
+                <div className="inline-flex items-center justify-center rounded-full border-2 border-neutral-800/80 p-1 max-w-full">
+                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-800/60 px-6 py-6 sm:px-10 sm:py-8 max-w-full">
+                    <div className="text-center">
+                      <div className="text-[11px] tracking-[0.25em] text-neutral-700 uppercase">
+                        {siteSettings?.title || 'Miky Hillside Lodge'}
+                      </div>
+                      <div className="mt-2 text-xs font-semibold text-neutral-900 tracking-wide uppercase">
+                        Reservation Confirmation
+                      </div>
+                      <div className="mt-2 text-[11px] text-neutral-700">
+                        {siteSettings?.address || 'Dumasua, Sunyani, Ghana'}
+                      </div>
+                      <div className="mt-4 text-[11px] text-neutral-700">
+                        Authorized Signature
+                      </div>
+                      <div className="mt-2 h-px w-40 bg-neutral-800/50 mx-auto" />
+                      <div className="mt-2 text-[10px] tracking-[0.2em] text-neutral-600 uppercase">
+                        Date: {formatDate(issueDate)}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Important Notes */}
-          <div className="p-8 print:p-6 bg-neutral-50">
-            <h3 className="text-lg font-bold text-dark mb-4">Important Information</h3>
-            <div className="space-y-2 text-sm text-neutral-700">
-              <div className="flex gap-2">
-                <span className="text-orange font-bold min-w-[20px]">1.</span>
-                <span>This confirmation is valid for visa application purposes at all embassies and consulates worldwide.</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-orange font-bold min-w-[20px]">2.</span>
-                <span>The guest must present valid photo identification and this confirmation upon check-in.</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-orange font-bold min-w-[20px]">3.</span>
-                <span>Check-in time is from 2:00 PM. Check-out time is 12:00 PM (noon).</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-orange font-bold min-w-[20px]">4.</span>
-                <span>This is an official document. Any alterations will invalidate this confirmation.</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-orange font-bold min-w-[20px]">5.</span>
-                <span>For any queries or verification, embassies may contact us using the information provided above.</span>
-              </div>
-            </div>
-          </div>
 
           {/* Footer */}
           <div className="p-6 print:p-4 bg-dark text-white text-center">
