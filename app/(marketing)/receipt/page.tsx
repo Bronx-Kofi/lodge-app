@@ -311,7 +311,7 @@ function ReceiptContent() {
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-2">
-                  Payment Status: <span className="font-semibold capitalize">{booking.paymentStatus || 'Pending'}</span>
+                  Payment Status: <span className="font-semibold">{booking.paymentStatus === 'paid' ? 'Paid' : booking.paymentStatus === 'partial' ? 'Deposit Paid' : 'Reservation Confirmed'}</span>
                 </div>
               </div>
             </div>

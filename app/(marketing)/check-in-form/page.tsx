@@ -1,14 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { PaymentSection } from './_payment-section';
 
 export default function CheckInFormPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadRooms() {
+      try {
+        setRoomsLoading(true);
+        const res = await fetch('/api/rooms/list');
+        const data = await res.json();
+        if (!mounted) return;
+
+        if (data?.success && Array.isArray(data.rooms)) {
+          setRooms(data.rooms);
+        }
+      } catch (e) {
+        // Non-blocking; guest can still submit with booking reference or free-text preference
+        console.error('Failed to load rooms list', e);
+      } finally {
+        if (mounted) setRoomsLoading(false);
+      }
+    }
+
+    loadRooms();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const [rooms, setRooms] = useState<Array<{ _id: string; title: string; price: number; capacity?: number }>>([]);
+  const [roomsLoading, setRoomsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -26,6 +58,15 @@ export default function CheckInFormPage() {
     checkOutDate: '',
     numberOfGuests: 1,
     roomPreference: '',
+    selectedRoomId: '',
+    selectedRoomTitle: '',
+    nightlyRate: 0,
+
+    paymentDeclaration: 'not_paid' as 'paid_telecel' | 'not_paid',
+    telecelPaymentNumber: '',
+    telecelTransactionId: '',
+    amountPaid: 0,
+    paymentNotes: '',
     
     // Additional Information
     specialRequests: '',
@@ -350,6 +391,39 @@ export default function CheckInFormPage() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-dark mb-2">
+                  Select Room <span className="text-red-500">*</span>
+                </label>
+                <select
+                  required
+                  value={formData.selectedRoomId}
+                  onChange={(e) => {
+                    const roomId = e.target.value;
+                    const room = rooms.find((r) => r._id === roomId);
+                    setFormData({
+                      ...formData,
+                      selectedRoomId: roomId,
+                      selectedRoomTitle: room?.title || '',
+                      nightlyRate: room?.price || 0,
+                    });
+                  }}
+                  className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none bg-white"
+                >
+                  <option value="" disabled>
+                    {roomsLoading ? 'Loading rooms...' : 'Select a room'}
+                  </option>
+                  {rooms.map((room) => (
+                    <option key={room._id} value={room._id}>
+                      {room.title} — GH {room.price.toLocaleString()} / night
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-neutral-500 mt-1">
+                  This is required so your reservation receipt can show the correct total amount.
+                </p>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-dark mb-2">
                   Room Preference (Optional)
                 </label>
                 <input
@@ -357,7 +431,7 @@ export default function CheckInFormPage() {
                   value={formData.roomPreference}
                   onChange={(e) => setFormData({ ...formData, roomPreference: e.target.value })}
                   className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none"
-                  placeholder="e.g., Ground floor, Away from noise"
+                  placeholder="e.g., Ground floor, away from noise"
                 />
               </div>
             </div>
@@ -412,6 +486,8 @@ export default function CheckInFormPage() {
               </div>
             </div>
           </motion.div>
+
+          <PaymentSection formData={formData} setFormData={setFormData} />
 
           {/* Emergency Contact */}
           <motion.div

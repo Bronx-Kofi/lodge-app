@@ -98,6 +98,19 @@ export async function POST(request: NextRequest) {
           checkOutDate,
           numberOfGuests,
           roomPreference,
+          selectedRoom->{
+            _id,
+            title,
+            price,
+            "image": image.asset->url
+          },
+          selectedRoomTitle,
+          nightlyRate,
+          paymentDeclaration,
+          telecelPaymentNumber,
+          telecelTransactionId,
+          amountPaid,
+          paymentNotes,
           specialRequests,
           submittedAt,
           status
@@ -118,9 +131,13 @@ export async function POST(request: NextRequest) {
 
       console.log('[Receipt API] Found check-in form:', checkInForm.checkInReference);
 
-      // Try to find room by roomPreference to get pricing
-      let roomData = null;
-      if (checkInForm.roomPreference) {
+      // Resolve room/pricing for check-in form receipts (priority: selectedRoom -> stored nightlyRate -> roomPreference text match)
+      let roomData = checkInForm.selectedRoom || null;
+
+      // If selectedRoom exists but lacks price (shouldn't), fall back
+      const storedNightlyRate = typeof checkInForm.nightlyRate === 'number' ? checkInForm.nightlyRate : null;
+
+      if (!roomData && checkInForm.roomPreference) {
         roomData = await readClient.fetch(
           `*[_type == "roomSimplified" && title match $roomTitle][0]{
             _id,
@@ -141,7 +158,11 @@ export async function POST(request: NextRequest) {
         Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))
       );
 
-      const nightlyRate = typeof roomData?.price === 'number' ? roomData.price : null;
+      const nightlyRate =
+        typeof roomData?.price === 'number'
+          ? roomData.price
+          : storedNightlyRate;
+
       const computedTotal = nightlyRate ? nightlyRate * nights : null;
 
       // Convert check-in form to booking format
@@ -149,7 +170,7 @@ export async function POST(request: NextRequest) {
         _id: checkInForm._id,
         bookingReference: checkInForm.checkInReference,
         room: roomData || {
-          title: checkInForm.roomPreference || 'Standard Room',
+          title: checkInForm.selectedRoomTitle || checkInForm.roomPreference || 'Standard Room',
           tagline: '',
           price: nightlyRate,
         },
@@ -165,12 +186,18 @@ export async function POST(request: NextRequest) {
         // For receipts, totalPrice should be the full stay total (not nightly rate)
         totalPrice: computedTotal,
         status: checkInForm.status || 'confirmed',
-        paymentStatus: 'pending',
+        // Map declaration to a paymentStatus for UI
+        paymentStatus: checkInForm.paymentDeclaration === 'paid_telecel' ? 'paid' : 'pending',
         specialRequests: checkInForm.specialRequests || '',
         createdAt: checkInForm.submittedAt,
         receiptNumber: null,
         receiptIssued: false,
         receiptIssuedAt: null,
+        paymentDeclaration: checkInForm.paymentDeclaration || 'not_paid',
+        telecelPaymentNumber: checkInForm.telecelPaymentNumber || '',
+        telecelTransactionId: checkInForm.telecelTransactionId || '',
+        amountPaid: typeof checkInForm.amountPaid === 'number' ? checkInForm.amountPaid : null,
+        paymentNotes: checkInForm.paymentNotes || '',
       };
     }
 

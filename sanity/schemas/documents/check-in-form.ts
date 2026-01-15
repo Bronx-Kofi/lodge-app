@@ -101,8 +101,65 @@ export default defineType({
     }),
     defineField({
       name: 'roomPreference',
-      title: 'Room Preference',
+      title: 'Room Preference (legacy)',
       type: 'string',
+      description: 'Legacy free-text field (kept for older submissions). New submissions should use Selected Room fields below.',
+    }),
+    defineField({
+      name: 'selectedRoom',
+      title: 'Selected Room',
+      type: 'reference',
+      to: [{ type: 'roomSimplified' }],
+      description: 'Room selected by the guest (recommended for accurate pricing).',
+    }),
+    defineField({
+      name: 'selectedRoomTitle',
+      title: 'Selected Room Title',
+      type: 'string',
+      description: 'Stored copy of the room title at time of submission (for audit/receipts).',
+    }),
+    defineField({
+      name: 'nightlyRate',
+      title: 'Nightly Rate',
+      type: 'number',
+      description: 'Stored nightly rate at time of submission (for accurate receipts).',
+    }),
+    defineField({
+      name: 'paymentDeclaration',
+      title: 'Payment Declaration',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Paid via Telecel Cash (Mobile Money)', value: 'paid_telecel' },
+          { title: 'Not Paid Yet', value: 'not_paid' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'not_paid',
+    }),
+    defineField({
+      name: 'telecelPaymentNumber',
+      title: 'Telecel Payment Number',
+      type: 'string',
+      description: 'Telecel number used for payment (if paid).',
+    }),
+    defineField({
+      name: 'telecelTransactionId',
+      title: 'Telecel Transaction ID / Reference',
+      type: 'string',
+      description: 'Transaction ID or reference provided by Telecel (if paid).',
+    }),
+    defineField({
+      name: 'amountPaid',
+      title: 'Amount Paid',
+      type: 'number',
+      description: 'Amount the guest states they paid (if paid).',
+    }),
+    defineField({
+      name: 'paymentNotes',
+      title: 'Payment Notes',
+      type: 'string',
+      description: 'Optional notes about payment (e.g., sender name).',
     }),
     defineField({
       name: 'specialRequests',
