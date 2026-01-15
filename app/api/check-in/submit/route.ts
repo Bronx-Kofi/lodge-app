@@ -146,11 +146,19 @@ export async function POST(request: NextRequest) {
       submittedAt: new Date().toISOString(),
     });
 
+    // TODO: Send email confirmation
+    // You can integrate with Resend, SendGrid, or other email service here
+    // Example: await sendEmail(email, generateBookingConfirmationEmail({...}))
+    
+    console.log('[Check-In API] Email should be sent to:', email);
+    console.log('[Check-In API] Reference:', checkInReference);
+
     return NextResponse.json({
       success: true,
       checkInReference,
       bookingReference: bookingReference || checkInReference,
       message: 'Check-in form submitted successfully',
+      emailNote: 'Confirmation will be sent to your email shortly',
     });
   } catch (error) {
     console.error('[Check-In API] DETAILED ERROR:', error);

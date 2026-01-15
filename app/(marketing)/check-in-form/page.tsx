@@ -51,7 +51,7 @@ export default function CheckInFormPage() {
     }
 
     if (formData.needsVisaReceipt && (!formData.nationality || !formData.passportNumber)) {
-      setError('Please provide nationality and passport number for visa receipt');
+      setError('Please provide nationality and passport number for official receipt');
       return;
     }
 
@@ -124,15 +124,18 @@ export default function CheckInFormPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
-          <h1 className="text-4xl font-bold text-dark mb-4">Pre-Check-In Form</h1>
-          <p className="text-lg text-neutral-600">
-            Complete your information before arrival for a smooth check-in experience
-          </p>
-          <div className="mt-4 inline-block bg-orange-50 border border-orange-200 rounded-lg px-4 py-2 text-sm text-orange-800">
-            ⏱️ Takes about 5 minutes to complete
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-green-700 text-sm font-medium mb-4">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Fast & Secure Booking
           </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-dark mb-3">Complete Your Reservation</h1>
+          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+            Just a few details and you&apos;re all set. We&apos;ll send a confirmation to your email.
+          </p>
         </motion.div>
 
         {error && (
@@ -151,12 +154,17 @@ export default function CheckInFormPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl p-8 shadow-md"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200"
           >
-            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
-              Personal Information
-            </h2>
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-200">
+              <div className="w-10 h-10 bg-orange text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-sm">
+                1
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-dark">Your Details</h2>
+                <p className="text-sm text-neutral-500">Let us know who&apos;s staying with us</p>
+              </div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -260,12 +268,17 @@ export default function CheckInFormPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl p-8 shadow-md"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200"
           >
-            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
-              Booking Details
-            </h2>
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-200">
+              <div className="w-10 h-10 bg-orange text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-sm">
+                2
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-dark">Stay Details</h2>
+                <p className="text-sm text-neutral-500">When are you checking in?</p>
+              </div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
@@ -355,12 +368,17 @@ export default function CheckInFormPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl p-8 shadow-md"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200"
           >
-            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
-              Additional Information
-            </h2>
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-200">
+              <div className="w-10 h-10 bg-orange text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-sm">
+                3
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-dark">Special Requests</h2>
+                <p className="text-sm text-neutral-500">Any preferences or requirements?</p>
+              </div>
+            </div>
 
             <div className="space-y-4">
               <div>
@@ -400,12 +418,17 @@ export default function CheckInFormPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-2xl p-8 shadow-md"
+            className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200"
           >
-            <h2 className="text-2xl font-bold text-dark mb-6 flex items-center gap-3">
-              <span className="w-8 h-8 bg-orange text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
-              Emergency Contact
-            </h2>
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-200">
+              <div className="w-10 h-10 bg-orange text-white rounded-lg flex items-center justify-center text-lg font-bold shadow-sm">
+                4
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-dark">Emergency Contact</h2>
+                <p className="text-sm text-neutral-500">Someone we can reach if needed</p>
+              </div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
@@ -456,7 +479,7 @@ export default function CheckInFormPage() {
             transition={{ delay: 0.5 }}
             className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6"
           >
-            <label className="flex items-start gap-3 cursor-pointer mb-4">
+            <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.needsVisaReceipt}
@@ -464,20 +487,12 @@ export default function CheckInFormPage() {
                 className="mt-1"
               />
               <div>
-                <span className="font-bold text-dark text-lg">I need an official receipt for visa purposes</span>
+                <span className="font-bold text-dark text-lg">Send me an official booking receipt</span>
                 <p className="text-sm text-neutral-700 mt-1">
-                  We&apos;ll generate a professional, embassy-ready receipt with your passport and nationality information
+                  Receive a professional confirmation document with all booking details
                 </p>
               </div>
             </label>
-
-            {formData.needsVisaReceipt && (!formData.nationality || !formData.passportNumber) && (
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mt-4">
-                <p className="text-sm text-orange-800 font-medium">
-                  ⚠️ Please fill in your nationality and passport number above to receive a visa-ready receipt
-                </p>
-              </div>
-            )}
           </motion.div>
 
           {/* Submit Button */}
