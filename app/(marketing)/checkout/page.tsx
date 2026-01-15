@@ -25,6 +25,9 @@ function CheckoutContent() {
     email: '',
     phone: '',
     specialRequests: '',
+    nationality: '',
+    passportNumber: '',
+    needsVisaReceipt: false,
   });
 
   const [pricing, setPricing] = useState<any>(null);
@@ -77,6 +80,12 @@ function CheckoutContent() {
       return;
     }
 
+    // Validate visa fields if needed
+    if (formData.needsVisaReceipt && (!formData.nationality || !formData.passportNumber)) {
+      setError('Please provide your nationality and passport number for visa receipt');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -95,6 +104,8 @@ function CheckoutContent() {
           children: parseInt(children || '0'),
           specialRequests: formData.specialRequests,
           totalPrice: pricing?.total || 0,
+          nationality: formData.nationality || '',
+          passportNumber: formData.passportNumber || '',
         }),
       });
 
@@ -230,6 +241,56 @@ function CheckoutContent() {
                         placeholder="Any special requirements or requests..."
                       />
                     </div>
+
+                    {/* Visa Receipt Option */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3 mb-3">
+                        <input
+                          type="checkbox"
+                          id="needsVisaReceipt"
+                          checked={formData.needsVisaReceipt}
+                          onChange={(e) => setFormData({ ...formData, needsVisaReceipt: e.target.checked })}
+                          className="mt-1"
+                        />
+                        <label htmlFor="needsVisaReceipt" className="text-sm font-medium text-dark cursor-pointer">
+                          I need this receipt for visa application purposes
+                        </label>
+                      </div>
+                      
+                      {formData.needsVisaReceipt && (
+                        <div className="space-y-3 pl-6 animate-in fade-in duration-300">
+                          <div>
+                            <label className="block text-sm font-medium text-dark mb-2">
+                              Nationality *
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.nationality}
+                              onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+                              className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none transition-all"
+                              placeholder="e.g., United States"
+                              required={formData.needsVisaReceipt}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-dark mb-2">
+                              Passport Number *
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.passportNumber}
+                              onChange={(e) => setFormData({ ...formData, passportNumber: e.target.value })}
+                              className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none transition-all"
+                              placeholder="e.g., A12345678"
+                              required={formData.needsVisaReceipt}
+                            />
+                            <p className="text-xs text-neutral-500 mt-1">
+                              This information will appear on your receipt for embassy verification
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <button
@@ -250,18 +311,66 @@ function CheckoutContent() {
                   exit={{ opacity: 0, x: -20 }}
                   className="bg-white rounded-2xl p-8 shadow-md"
                 >
-                  <h2 className="text-2xl font-bold mb-6 text-dark">Payment</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-dark">Payment Instructions</h2>
 
-                  {/* Placeholder for payment integration */}
-                  <div className="border-2 border-dashed border-neutral-300 rounded-lg p-12 text-center mb-6">
-                    <div className="text-6xl mb-4">💳</div>
-                    <h3 className="text-xl font-semibold mb-2">Payment Integration</h3>
-                    <p className="text-neutral-600 mb-6">
-                      Stripe payment form will be integrated here
-                    </p>
-                    <p className="text-sm text-neutral-500">
-                      For now, proceed to complete the booking
-                    </p>
+                  {/* Payment Information */}
+                  <div className="space-y-6 mb-6">
+                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-xl p-6">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="w-12 h-12 bg-orange text-white rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                          📱
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-dark mb-2">Pay via Telecel Cash</h3>
+                          <p className="text-sm text-neutral-700">
+                            After confirming your booking, you will receive payment instructions via WhatsApp to complete your payment through Telecel Cash.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                      <h4 className="font-semibold text-dark mb-3 flex items-center gap-2">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        How Payment Works
+                      </h4>
+                      <ol className="space-y-3 text-sm text-neutral-700">
+                        <li className="flex gap-3">
+                          <span className="font-bold text-orange">1.</span>
+                          <span>Click "Confirm Booking" to reserve your room</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="font-bold text-orange">2.</span>
+                          <span>We will contact you via WhatsApp with payment details</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="font-bold text-orange">3.</span>
+                          <span>Make payment through Telecel Cash (Mobile Money)</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="font-bold text-orange">4.</span>
+                          <span>Once payment is confirmed, your booking is complete!</span>
+                        </li>
+                        <li className="flex gap-3">
+                          <span className="font-bold text-orange">5.</span>
+                          <span>Access your official receipt anytime for visa applications</span>
+                        </li>
+                      </ol>
+                    </div>
+
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div className="text-sm text-green-800">
+                          <p className="font-semibold mb-1">Your booking is secure</p>
+                          <p>After completing payment, you'll receive an official receipt suitable for visa applications and expense reports.</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex gap-4">
@@ -276,7 +385,7 @@ function CheckoutContent() {
                       disabled={loading}
                       className="btn-primary flex-1 disabled:opacity-50"
                     >
-                      {loading ? 'Processing...' : 'Complete Booking'}
+                      {loading ? 'Processing...' : 'Confirm Booking'}
                     </button>
                   </div>
                 </motion.div>
