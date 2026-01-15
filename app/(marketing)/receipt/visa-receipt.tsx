@@ -444,8 +444,8 @@ function VisaReceiptContent() {
             This confirmation meets all requirements for visa applications worldwide. To submit:
           </p>
           <ol className="list-decimal list-inside space-y-1 ml-2">
-            <li>Click "Download PDF" to save as PDF file, OR</li>
-            <li>Click "Print" and select "Save as PDF" in the print dialog</li>
+            <li>Click &quot;Download PDF&quot; to save as PDF file, OR</li>
+            <li>Click &quot;Print&quot; and select &quot;Save as PDF&quot; in the print dialog</li>
             <li>Submit the PDF with your visa application documents</li>
           </ol>
         </div>
