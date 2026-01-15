@@ -352,7 +352,11 @@ function VisaReceiptContent() {
                 <div className="flex">
                   <div className="w-40 text-sm text-neutral-600 font-semibold">Room Rate:</div>
                   <div className="flex-1 font-medium text-dark">
-                    {booking.room.price ? `GH₵ ${booking.room.price.toLocaleString()} per night` : 'Rate on file'}
+                    {booking.room?.price
+                      ? `GH₵ ${booking.room.price.toLocaleString()} per night`
+                      : booking.totalPrice && nights > 0
+                        ? `GH₵ ${Math.round(booking.totalPrice / nights).toLocaleString()} per night`
+                        : 'Standard rate'}
                   </div>
                 </div>
                 <div className="flex">
@@ -364,16 +368,16 @@ function VisaReceiptContent() {
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount:</div>
                   <div className="text-xl font-bold text-orange">
-                    {booking.room.price
-                      ? `GH₵ ${(booking.room.price * nights).toLocaleString()}`
-                      : booking.totalPrice
-                        ? `GH₵ ${booking.totalPrice.toLocaleString()}`
+                    {booking.totalPrice
+                      ? `GH₵ ${booking.totalPrice.toLocaleString()}`
+                      : booking.room?.price
+                        ? `GH₵ ${(booking.room.price * nights).toLocaleString()}`
                         : 'Amount on file'}
                   </div>
                 </div>
-                {booking.room.price && (
+                {booking.totalPrice && nights > 0 && (
                   <div className="text-sm text-neutral-500 text-right mt-1">
-                    (GH₵ {booking.room.price.toLocaleString()} × {nights} nights)
+                    (GH₵ {Math.round(booking.totalPrice / nights).toLocaleString()} × {nights} nights)
                   </div>
                 )}
               </div>
