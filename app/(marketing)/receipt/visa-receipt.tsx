@@ -467,45 +467,42 @@ function VisaReceiptContent() {
                 </div>
               </div>
               <div className="mt-6 pt-6 border-t border-neutral-300">
-                <div className="text-sm text-neutral-600 font-semibold mb-4">Official Seal</div>
+                <div className="text-sm text-neutral-600 font-semibold mb-6">Official Seal</div>
 
-                {/* Fixed-size seal for consistent, professional proportions */}
-                <div className="inline-flex items-center justify-center rounded-full border border-neutral-900/70 w-[220px] h-[220px] sm:w-[240px] sm:h-[240px] bg-white">
-                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-900/60 w-[206px] h-[206px] sm:w-[226px] sm:h-[226px]">
-                    <div className="text-center px-4">
-                      <div className="text-[10px] tracking-[0.22em] text-neutral-700 uppercase">
-                        {siteSettings?.title || 'Miky Hillside Lodge'}
-                      </div>
+                <div className="flex justify-center md:justify-start">
+                  <div className="relative group">
+                    {/* Seal Container */}
+                    <div className="w-64 h-64 rounded-full border-4 border-neutral-800 flex flex-col items-center justify-center p-6 text-center relative bg-white shrink-0">
+                      {/* Inner Ring (Decorative) */}
+                      <div className="absolute inset-2 rounded-full border border-neutral-800 opacity-50"></div>
 
-                      <div className="mt-2 text-[11px] font-semibold text-neutral-900 tracking-[0.12em] uppercase">
-                        Reservation Confirmation
-                      </div>
+                      {/* Content */}
+                      <div className="relative z-10 flex flex-col items-center justify-center h-full w-full">
+                        <div className="uppercase font-bold text-xs tracking-[0.2em] text-neutral-800 mb-1">
+                          {siteSettings?.title || 'Miky Hillside Lodge'}
+                        </div>
 
-                      <div className="mt-2 text-[10px] text-neutral-700 truncate max-w-[190px] mx-auto">
-                        {siteSettings?.address || 'Dumasua, Sunyani, Ghana'}
-                      </div>
+                        <div className="text-[10px] uppercase tracking-wider text-neutral-600 mb-4">
+                          Official Confirmation
+                        </div>
 
-                      <div className="mt-4 text-[10px] text-neutral-700 uppercase tracking-[0.18em]">
-                        Authorized Signature
-                      </div>
-
-                      {/* Signature image (bigger, clearer) */}
-                      <div className="mt-2 flex items-center justify-center">
-                        <div className="relative w-56 h-14">
+                        {/* Signature - Centered and prominent */}
+                        <div className="relative w-56 h-24 my-1">
                           <Image
                             src="/sig.png"
                             alt="Authorized signature"
                             fill
-                            className="object-contain"
+                            className="object-contain" // Changed from object-contain to be safer, but contain is good
+                            sizes="(max-width: 768px) 100vw, 224px"
                             priority
                           />
                         </div>
-                      </div>
 
-                      <div className="mt-2 h-px w-56 bg-neutral-900/50 mx-auto" />
+                        <div className="w-32 h-px bg-neutral-800/20 my-2"></div>
 
-                      <div className="mt-2 text-[10px] tracking-[0.18em] text-neutral-700 uppercase">
-                        Date: {formatDate(issueDate)}
+                        <div className="text-[10px] font-medium text-neutral-600 uppercase tracking-widest">
+                          {formatDate(issueDate)}
+                        </div>
                       </div>
                     </div>
                   </div>
