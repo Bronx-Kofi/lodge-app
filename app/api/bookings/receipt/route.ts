@@ -118,13 +118,29 @@ export async function POST(request: NextRequest) {
 
       console.log('[Receipt API] Found check-in form:', checkInForm.checkInReference);
 
+      // Try to find room by roomPreference to get pricing
+      let roomData = null;
+      if (checkInForm.roomPreference) {
+        roomData = await readClient.fetch(
+          `*[_type == "roomSimplified" && title match $roomTitle][0]{
+            _id,
+            title,
+            tagline,
+            price,
+            "image": image.asset->url
+          }`,
+          { roomTitle: `*${checkInForm.roomPreference}*` }
+        );
+      }
+
       // Convert check-in form to booking format
       booking = {
         _id: checkInForm._id,
         bookingReference: checkInForm.checkInReference,
-        room: {
+        room: roomData || {
           title: checkInForm.roomPreference || 'Standard Room',
           tagline: '',
+          price: null,
         },
         guestName: checkInForm.guestName,
         guestEmail: checkInForm.email,
@@ -135,7 +151,7 @@ export async function POST(request: NextRequest) {
         checkOut: checkInForm.checkOutDate,
         adults: checkInForm.numberOfGuests || 1,
         children: 0,
-        totalPrice: 0,
+        totalPrice: roomData?.price || 0,
         status: checkInForm.status || 'confirmed',
         paymentStatus: 'pending',
         specialRequests: checkInForm.specialRequests || '',
