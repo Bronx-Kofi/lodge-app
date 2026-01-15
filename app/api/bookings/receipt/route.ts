@@ -27,11 +27,11 @@ function generateReceiptNumber(bookingReference: string): string {
 
 export async function POST(request: NextRequest) {
   console.log('[Receipt API] Request received');
-  
+
   try {
     const body = await request.json();
     const { email, bookingReference } = body;
-    
+
     console.log('[Receipt API] Looking for:', { email, bookingReference });
 
     if (!email || !bookingReference) {
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
           _id,
           title,
           tagline,
+          price,
           "image": image.asset->url
         },
         guestName,
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
       if (!checkInForm) {
         console.log('[Receipt API] No check-in form found either');
         return NextResponse.json(
-          { 
+          {
             error: 'Reservation not found with the provided details',
             details: 'Please check your reference number and email address'
           },
@@ -167,7 +168,7 @@ export async function POST(request: NextRequest) {
               receiptIssuedAt,
             })
             .commit();
-          
+
           console.log('[Receipt API] Receipt number saved to booking');
         } catch (patchError) {
           console.error('[Receipt API] Error updating booking:', patchError);
@@ -192,9 +193,9 @@ export async function POST(request: NextRequest) {
     console.error('[Receipt API] Error name:', (error as Error).name);
     console.error('[Receipt API] Error message:', (error as Error).message);
     console.error('[Receipt API] Error stack:', (error as Error).stack);
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate receipt',
         details: (error as Error).message,
         type: (error as Error).name
