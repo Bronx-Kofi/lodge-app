@@ -32,6 +32,7 @@ import booking from "@/sanity/schemas/documents/booking";
 import availability from "@/sanity/schemas/documents/availability";
 import pricingRule from "@/sanity/schemas/documents/pricing-rule";
 import review from "@/sanity/schemas/documents/review";
+import checkInForm from "@/sanity/schemas/documents/check-in-form";
 
 // Other Documents
 import author from "@/sanity/schemas/documents/author";
@@ -69,6 +70,7 @@ export default defineConfig({
       
       // Booking System
       booking,
+      checkInForm,
       availability,
       pricingRule,
       review,

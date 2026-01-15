@@ -162,6 +162,23 @@ export default defineType({
       description: 'When the receipt was first generated',
       readOnly: true,
     }),
+    defineField({
+      name: 'checkInFormData',
+      title: 'Check-In Form Data',
+      type: 'object',
+      description: 'Additional information from pre-check-in form',
+      fields: [
+        { name: 'dateOfBirth', title: 'Date of Birth', type: 'date' },
+        { name: 'roomPreference', title: 'Room Preference', type: 'string' },
+        { name: 'dietaryRestrictions', title: 'Dietary Restrictions', type: 'string' },
+        { name: 'arrivalTime', title: 'Arrival Time', type: 'string' },
+        { name: 'needsPickup', title: 'Needs Pickup', type: 'boolean' },
+        { name: 'emergencyContactName', title: 'Emergency Contact Name', type: 'string' },
+        { name: 'emergencyContactPhone', title: 'Emergency Contact Phone', type: 'string' },
+        { name: 'emergencyContactRelation', title: 'Emergency Contact Relation', type: 'string' },
+        { name: 'submittedAt', title: 'Submitted At', type: 'datetime' },
+      ],
+    }),
   ],
   preview: {
     select: {

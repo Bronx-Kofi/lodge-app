@@ -42,6 +42,25 @@ export const deadSimpleCMS = (S: StructureBuilder) =>
 
       S.divider(),
 
+      // BOOKINGS & CHECK-IN
+      S.listItem()
+        .title('Bookings')
+        .child(
+          S.documentTypeList('booking')
+            .title('All Bookings')
+            .defaultOrdering([{ field: 'checkIn', direction: 'desc' }])
+        ),
+
+      S.listItem()
+        .title('Check-In Forms')
+        .child(
+          S.documentTypeList('checkInForm')
+            .title('Guest Check-In Forms')
+            .defaultOrdering([{ field: 'submittedAt', direction: 'desc' }])
+        ),
+
+      S.divider(),
+
       // PAGES
       S.listItem()
         .title('Pages')
