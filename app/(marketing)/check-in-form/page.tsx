@@ -68,6 +68,13 @@ export default function CheckInFormPage() {
 
       const data = await res.json();
 
+      // Check for non-200 responses
+      if (!res.ok) {
+        console.error('API error:', res.status, data);
+        setError(data.error || `Server error (${res.status}). Please try again or contact us via WhatsApp.`);
+        return;
+      }
+
       if (data.error) {
         setError(data.error);
         return;
