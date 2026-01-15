@@ -395,6 +395,40 @@ function VisaReceiptContent() {
                   </span>
                 </div>
               </div>
+
+             {booking.paymentDeclaration === 'paid_telecel' && (
+               <div className="mt-4 p-4 bg-neutral-50 rounded border border-neutral-200">
+                 <div className="text-sm font-semibold text-neutral-800 mb-2">Payment Information</div>
+                 <div className="grid md:grid-cols-2 gap-3 text-sm text-neutral-700">
+                   <div>
+                     <span className="text-neutral-500">Method:</span> Telecel Cash (Mobile Money)
+                   </div>
+                   <div>
+                     <span className="text-neutral-500">Paid To:</span> 0201449457
+                   </div>
+                   {booking.telecelPaymentNumber && (
+                     <div>
+                       <span className="text-neutral-500">Sender Number:</span> {booking.telecelPaymentNumber}
+                     </div>
+                   )}
+                   {booking.telecelTransactionId && (
+                     <div>
+                       <span className="text-neutral-500">Transaction ID:</span> {booking.telecelTransactionId}
+                     </div>
+                   )}
+                   {typeof booking.amountPaid === 'number' && booking.amountPaid > 0 && (
+                     <div>
+                       <span className="text-neutral-500">Amount Paid:</span> GH₵ {booking.amountPaid.toLocaleString()}
+                     </div>
+                   )}
+                   {booking.paymentNotes && (
+                     <div className="md:col-span-2">
+                       <span className="text-neutral-500">Notes:</span> {booking.paymentNotes}
+                     </div>
+                   )}
+                 </div>
+               </div>
+             )}
             </div>
           </div>
 

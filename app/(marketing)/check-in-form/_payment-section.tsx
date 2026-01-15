@@ -30,9 +30,17 @@ export function PaymentSection({
       </div>
 
       <div className="space-y-4">
+        <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4 text-sm text-neutral-800">
+          <div className="font-semibold">Telecel Cash payment number</div>
+          <div className="mt-1 text-lg font-bold tracking-wide">0201449457</div>
+          <div className="mt-1 text-xs text-neutral-600">
+            If you paid, please use the fields below to enter the transaction reference and the number you sent from.
+          </div>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-dark mb-2">
-            Have you paid via Telecel Cash (Mobile Money)?
+            Payment Status
           </label>
           <select
             value={formData.paymentDeclaration}
@@ -53,7 +61,7 @@ export function PaymentSection({
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-dark mb-2">
-                Telecel Number Used
+                Sender Number (Number you sent from)
               </label>
               <input
                 type="text"

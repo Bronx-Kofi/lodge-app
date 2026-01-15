@@ -313,6 +313,19 @@ function ReceiptContent() {
                 <div className="text-sm text-neutral-600 mt-2">
                   Payment Status: <span className="font-semibold">{booking.paymentStatus === 'paid' ? 'Paid' : booking.paymentStatus === 'partial' ? 'Deposit Paid' : 'Reservation Confirmed'}</span>
                 </div>
+
+                {booking.paymentDeclaration === 'paid_telecel' && (
+                  <div className="mt-3 text-sm text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-lg p-3">
+                    <div className="font-semibold text-neutral-800 mb-1">Payment Information</div>
+                    <div>Method: Telecel Cash (Mobile Money)</div>
+                    <div>Paid To: 0201449457</div>
+                    {booking.telecelPaymentNumber && <div>Sender Number: {booking.telecelPaymentNumber}</div>}
+                    {booking.telecelTransactionId && <div>Transaction ID: {booking.telecelTransactionId}</div>}
+                    {typeof booking.amountPaid === 'number' && booking.amountPaid > 0 && (
+                      <div>Amount Paid: GH₵ {booking.amountPaid.toLocaleString()}</div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
