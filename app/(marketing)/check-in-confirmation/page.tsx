@@ -144,38 +144,33 @@ function CheckInConfirmationContent() {
           </div>
         </motion.div>
 
-        {/* Visa Receipt Section */}
+        {/* Reservation Receipt Section */}
         {reference && email && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mb-6"
+            className="bg-white border border-neutral-200 rounded-lg p-6 mb-6 shadow-sm"
           >
             <div className="flex gap-4 items-start">
-              <div className="text-4xl">🛂</div>
+              <div className="flex-shrink-0">
+                <svg className="w-6 h-6 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-dark mb-2">
-                  Need a Visa Application Receipt?
+                <h3 className="text-lg font-semibold text-dark mb-2">
+                  Download Your Reservation Receipt
                 </h3>
-                <p className="text-sm text-neutral-700 mb-4">
-                  Download your embassy-compliant booking confirmation for visa applications. 
-                  Accepted by embassies worldwide including Schengen, US, UK, Canada, and Australia.
+                <p className="text-sm text-neutral-600 mb-4">
+                  Access your official reservation confirmation. Available in standard and embassy-compliant formats for visa applications.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href={`/receipt?reference=${reference}&email=${encodeURIComponent(email)}`}
-                    className="btn-secondary text-center"
-                  >
-                    📄 View Standard Receipt
-                  </Link>
-                  <Link
-                    href={`/receipt/visa?reference=${reference}&email=${encodeURIComponent(email)}`}
-                    className="btn-primary text-center"
-                  >
-                    🛂 Get Visa Application Receipt
-                  </Link>
-                </div>
+                <Link
+                  href={`/receipt/download?reference=${reference}&email=${encodeURIComponent(email)}`}
+                  className="inline-flex items-center justify-center px-6 py-2.5 bg-orange text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
+                >
+                  View Receipt Options
+                </Link>
               </div>
             </div>
           </motion.div>
