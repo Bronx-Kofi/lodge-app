@@ -169,7 +169,7 @@ export default async function MarketingLayout({
 
                     {/* Primary Action Button */}
                     <Link
-                        href="/rooms"
+                        href="/check-in-form"
                         className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-orange text-white text-sm font-bold rounded-full shadow-brand hover:shadow-glow hover:scale-105 transition-all duration-300"
                     >
                         Book Now
