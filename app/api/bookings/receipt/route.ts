@@ -133,6 +133,17 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Calculate nights and total for check-in form receipts
+      const checkInDate = new Date(checkInForm.checkInDate);
+      const checkOutDate = new Date(checkInForm.checkOutDate);
+      const nights = Math.max(
+        1,
+        Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))
+      );
+
+      const nightlyRate = typeof roomData?.price === 'number' ? roomData.price : null;
+      const computedTotal = nightlyRate ? nightlyRate * nights : null;
+
       // Convert check-in form to booking format
       booking = {
         _id: checkInForm._id,
@@ -140,7 +151,7 @@ export async function POST(request: NextRequest) {
         room: roomData || {
           title: checkInForm.roomPreference || 'Standard Room',
           tagline: '',
-          price: null,
+          price: nightlyRate,
         },
         guestName: checkInForm.guestName,
         guestEmail: checkInForm.email,
@@ -151,7 +162,8 @@ export async function POST(request: NextRequest) {
         checkOut: checkInForm.checkOutDate,
         adults: checkInForm.numberOfGuests || 1,
         children: 0,
-        totalPrice: roomData?.price || 0,
+        // For receipts, totalPrice should be the full stay total (not nightly rate)
+        totalPrice: computedTotal,
         status: checkInForm.status || 'confirmed',
         paymentStatus: 'pending',
         specialRequests: checkInForm.specialRequests || '',

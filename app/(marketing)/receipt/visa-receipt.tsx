@@ -472,35 +472,35 @@ function VisaReceiptContent() {
                 <div className="flex justify-center md:justify-start">
                   <div className="relative group">
                     {/* Seal Container */}
-                    <div className="w-64 h-64 rounded-full border-4 border-neutral-800 flex flex-col items-center justify-center p-6 text-center relative bg-white shrink-0">
+                    <div className="w-64 h-64 rounded-full border-4 border-neutral-800 flex flex-col items-center justify-center p-4 text-center relative bg-white shrink-0">
                       {/* Inner Ring (Decorative) */}
                       <div className="absolute inset-2 rounded-full border border-neutral-800 opacity-50"></div>
 
                       {/* Content */}
                       <div className="relative z-10 flex flex-col items-center justify-center h-full w-full">
-                        <div className="uppercase font-bold text-xs tracking-[0.2em] text-neutral-800 mb-1">
+                        <div className="uppercase font-bold text-[11px] tracking-widest text-neutral-800 mb-0.5 px-2">
                           {siteSettings?.title || 'Miky Hillside Lodge'}
                         </div>
 
-                        <div className="text-[10px] uppercase tracking-wider text-neutral-600 mb-4">
+                        <div className="text-[9px] uppercase tracking-wider text-neutral-600 mb-2">
                           Official Confirmation
                         </div>
 
                         {/* Signature - Centered and prominent */}
-                        <div className="relative w-56 h-24 my-1">
+                        <div className="relative w-52 h-24 my-1">
                           <Image
                             src="/sig.png"
                             alt="Authorized signature"
                             fill
-                            className="object-contain" // Changed from object-contain to be safer, but contain is good
-                            sizes="(max-width: 768px) 100vw, 224px"
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 208px"
                             priority
                           />
                         </div>
 
-                        <div className="w-32 h-px bg-neutral-800/20 my-2"></div>
+                        <div className="w-28 h-px bg-neutral-800/20 my-1"></div>
 
-                        <div className="text-[10px] font-medium text-neutral-600 uppercase tracking-widest">
+                        <div className="text-[9px] font-medium text-neutral-600 uppercase tracking-widest">
                           {formatDate(issueDate)}
                         </div>
                       </div>
