@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { client } from '@/sanity/lib/client';
+import { createClient } from 'next-sanity';
+import { apiVersion, dataset, projectId } from '@/sanity/lib/api';
+
+// Create a client with write permissions
+const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false, // Don't use CDN for mutations
+  token: process.env.SANITY_API_TOKEN, // Write token from environment
+});
 
 // Generate unique check-in form reference
 function generateCheckInReference(): string {
