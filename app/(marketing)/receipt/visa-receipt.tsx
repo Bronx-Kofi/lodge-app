@@ -364,11 +364,9 @@ function VisaReceiptContent() {
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount:</div>
                   <div className="text-xl font-bold text-orange">
-                    {booking.totalAmount
-                      ? `GH₵ ${booking.totalAmount.toLocaleString()}`
-                      : booking.room.price
-                        ? `GH₵ ${(booking.room.price * nights).toLocaleString()}`
-                        : 'Amount on file'}
+                    {booking.room.price
+                      ? `GH₵ ${(booking.room.price * nights).toLocaleString()}`
+                      : 'Amount on file'}
                   </div>
                 </div>
               </div>
@@ -460,7 +458,7 @@ function VisaReceiptContent() {
               <div className="mt-6 pt-6 border-t border-neutral-300">
                 <div className="text-sm text-neutral-600 font-semibold mb-4">Official Seal</div>
                 <div className="inline-flex items-center justify-center rounded-full border-2 border-neutral-800/80 p-1 max-w-full">
-                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-800/60 px-6 py-6 sm:px-10 sm:py-8 max-w-full">
+                  <div className="inline-flex items-center justify-center rounded-full border border-neutral-800/60 px-4 py-3 sm:px-5 sm:py-4 max-w-full">
                     <div className="text-center">
                       <div className="text-[11px] tracking-[0.25em] text-neutral-700 uppercase">
                         {siteSettings?.title || 'Miky Hillside Lodge'}
@@ -476,8 +474,8 @@ function VisaReceiptContent() {
                       </div>
 
                       {/* Signature image */}
-                      <div className="mt-2 flex items-center justify-center">
-                        <div className="relative w-48 h-14">
+                      <div className="mt-3 flex items-center justify-center">
+                        <div className="relative w-56 h-20">
                           <Image
                             src="/sig.png"
                             alt="Authorized signature"
