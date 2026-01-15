@@ -413,7 +413,7 @@ export default function CheckInFormPage() {
                   </option>
                   {rooms.map((room) => (
                     <option key={room._id} value={room._id}>
-                      {room.title} — GH {room.price.toLocaleString()} / night
+                      {room.title} — GH₵ {room.price.toLocaleString()} / night
                     </option>
                   ))}
                 </select>

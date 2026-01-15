@@ -158,10 +158,22 @@ export async function POST(request: NextRequest) {
         Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))
       );
 
-      const nightlyRate =
+      // If we still can't determine the nightly rate (legacy submissions), fall back to the lowest-priced room.
+      let nightlyRate =
         typeof roomData?.price === 'number'
           ? roomData.price
           : storedNightlyRate;
+
+      let fallbackRoom: { title: string; price: number } | null = null;
+      if (nightlyRate == null) {
+        fallbackRoom = await readClient.fetch(
+          `*[_type == "roomSimplified" && defined(price)] | order(price asc)[0]{
+            title,
+            price
+          }`
+        );
+        nightlyRate = typeof fallbackRoom?.price === 'number' ? fallbackRoom.price : null;
+      }
 
       const computedTotal = nightlyRate ? nightlyRate * nights : null;
 
@@ -170,7 +182,11 @@ export async function POST(request: NextRequest) {
         _id: checkInForm._id,
         bookingReference: checkInForm.checkInReference,
         room: roomData || {
-          title: checkInForm.selectedRoomTitle || checkInForm.roomPreference || 'Standard Room',
+          title:
+            checkInForm.selectedRoomTitle ||
+            checkInForm.roomPreference ||
+            fallbackRoom?.title ||
+            'Standard Room',
           tagline: '',
           price: nightlyRate,
         },

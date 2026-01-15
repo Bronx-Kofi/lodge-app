@@ -84,7 +84,19 @@ function ReceiptContent() {
   const checkInDate = new Date(booking.checkIn);
   const checkOutDate = new Date(booking.checkOut);
   const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
-  const pricePerNight = nights > 0 ? booking.totalPrice / nights : booking.totalPrice;
+  const computedTotal =
+    typeof booking.totalPrice === 'number' && booking.totalPrice > 0
+      ? booking.totalPrice
+      : booking.room?.price && nights > 0
+        ? booking.room.price * nights
+        : null;
+
+  const pricePerNight =
+    booking.room?.price && booking.room.price > 0
+      ? booking.room.price
+      : computedTotal && nights > 0
+        ? computedTotal / nights
+        : 0;
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-GB', {
@@ -300,14 +312,14 @@ function ReceiptContent() {
                   </div>
                 </div>
                 <div className="font-semibold text-dark">
-                  GH₵{booking.totalPrice.toLocaleString()}
+                  {computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : 'Contact property'}
                 </div>
               </div>
               <div className="border-t-2 border-neutral-200 pt-3 mt-3">
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount</div>
                   <div className="text-2xl font-bold text-orange">
-                    GH₵{booking.totalPrice.toLocaleString()}
+                    {computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : 'Contact property'}
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-2">
