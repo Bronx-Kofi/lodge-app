@@ -202,40 +202,40 @@
   /* Hide navigation and other UI elements */
   nav,
   header,
-  footer:not(.print\\:block),
-  .print\\:hidden {
+  footer:not(.print-block),
+  .print-hidden {
     display: none !important;
   }
 
   /* Ensure receipt takes full page */
-  .print\\:p-6 {
+  .print-p-6 {
     padding: 1.5rem !important;
   }
 
-  .print\\:p-4 {
+  .print-p-4 {
     padding: 1rem !important;
   }
 
-  .print\\:bg-white {
+  .print-bg-white {
     background-color: white !important;
   }
 
-  .print\\:py-0 {
+  .print-py-0 {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
 
-  .print\\:px-0 {
+  .print-px-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 
-  .print\\:shadow-none {
+  .print-shadow-none {
     box-shadow: none !important;
   }
 
   /* Prevent page breaks inside important sections */
-  .print\\:break-inside-avoid {
+  .print-break-inside-avoid {
     break-inside: avoid;
     page-break-inside: avoid;
   }
