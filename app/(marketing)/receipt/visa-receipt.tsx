@@ -111,28 +111,30 @@ function VisaReceiptContent() {
   return (
     <div className="min-h-screen bg-neutral-100 py-8 print:bg-white print:py-0">
       {/* Action Buttons - Hidden on print */}
-      <div className="max-w-4xl mx-auto px-6 mb-6 print:hidden">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-6 print:hidden">
         <div className="bg-white rounded-lg shadow-sm p-4">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="font-semibold text-dark">Hotel Booking Confirmation for Visa Application</h2>
-              <p className="text-sm text-neutral-600">Reference: {booking.bookingReference}</p>
+          {/* Mobile: Stack everything vertically */}
+          <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+            <div className="flex-1">
+              <h2 className="font-semibold text-dark text-base sm:text-lg">Hotel Booking Confirmation for Visa Application</h2>
+              <p className="text-xs sm:text-sm text-neutral-600 mt-1">Reference: {booking.bookingReference}</p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
               <button
                 onClick={handleDownloadPDF}
-                className="btn-primary flex items-center justify-center gap-2 whitespace-nowrap"
+                className="btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-2.5"
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Download PDF
               </button>
               <button
                 onClick={handlePrint}
-                className="btn-secondary flex items-center justify-center gap-2 whitespace-nowrap"
+                className="btn-secondary flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-2.5"
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
                 Print

@@ -28,7 +28,7 @@ export function AkwaabaFab({
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-orange text-white px-5 py-3 rounded-full shadow-brand hover:shadow-glow transition-shadow group"
+            className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-[60] flex items-center gap-3 bg-orange text-white px-5 py-3 rounded-full shadow-brand hover:shadow-glow transition-shadow group"
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 1, type: "spring", stiffness: 200 }}
@@ -40,9 +40,10 @@ export function AkwaabaFab({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
 
-            {/* Label - hidden on small screens */}
-            <span className="hidden sm:inline font-medium">
-                Chat with us
+            {/* Label - show on all screens (short on mobile) */}
+            <span className="inline font-medium text-sm sm:text-base">
+                <span className="sm:hidden">Chat</span>
+                <span className="hidden sm:inline">Chat with us</span>
             </span>
 
             {/* WhatsApp icon */}
