@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
+import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { getSiteSettings } from '@/lib/sanity-queries';
@@ -420,7 +421,22 @@ function VisaReceiptContent() {
                       <div className="mt-4 text-[11px] text-neutral-700">
                         Authorized Signature
                       </div>
-                      <div className="mt-2 h-px w-40 bg-neutral-800/50 mx-auto" />
+
+                      {/* Signature image */}
+                      <div className="mt-2 flex items-center justify-center">
+                        <div className="relative w-44 h-10">
+                          <Image
+                            src="/sig.png"
+                            alt="Authorized signature"
+                            fill
+                            className="object-contain"
+                            priority
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-2 h-px w-44 bg-neutral-800/50 mx-auto" />
+
                       <div className="mt-2 text-[10px] tracking-[0.2em] text-neutral-600 uppercase">
                         Date: {formatDate(issueDate)}
                       </div>
