@@ -391,7 +391,7 @@ function VisaReceiptContent() {
                       ? 'Payment Received - Fully Prepaid'
                       : booking.paymentStatus === 'partial'
                         ? 'Deposit Received - Balance Due at Check-in'
-                        : 'Confirmed - Payment Due at Property'}
+                        : 'Reservation Confirmed'}
                   </span>
                 </div>
               </div>
