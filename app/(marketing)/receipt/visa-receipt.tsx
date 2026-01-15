@@ -110,7 +110,7 @@ function VisaReceiptContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-100 py-8 print:bg-white print:py-0">
+    <div className="min-h-screen bg-neutral-100 pt-24 pb-8 print:bg-white print:py-0">
       {/* Action Bar - Hidden on print */}
       <div className="print:hidden sticky top-[72px] sm:top-[80px] z-40 bg-neutral-100/90 backdrop-blur">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3">
@@ -181,8 +181,8 @@ function VisaReceiptContent() {
           {/* Official Header */}
           <div className="border-b-4 border-orange p-8 print:p-6">
             <div className="text-center mb-6">
-              <div className="inline-block px-6 py-2 bg-orange text-white font-bold text-sm mb-4">
-                OFFICIAL DOCUMENT
+              <div className="inline-flex items-center justify-center px-5 py-2 bg-orange text-white font-semibold text-xs tracking-widest uppercase rounded-sm mb-4 leading-none">
+                Official Document
               </div>
               <h1 className="text-2xl font-bold text-dark uppercase tracking-wide">
                 Hotel Booking Confirmation
