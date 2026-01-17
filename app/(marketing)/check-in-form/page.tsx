@@ -49,7 +49,9 @@ export default function CheckInFormPage() {
     email: '',
     phone: '',
     nationality: '',
+    idType: 'passport' as 'passport' | 'ghanaCard',
     passportNumber: '',
+    ghanaCardNumber: '',
     dateOfBirth: '',
     
     // Booking Details
@@ -91,9 +93,21 @@ export default function CheckInFormPage() {
       return;
     }
 
-    if (formData.needsVisaReceipt && (!formData.nationality || !formData.passportNumber)) {
-      setError('Please provide nationality and passport number for official receipt');
+    // Validate ID based on type
+    if (formData.idType === 'passport' && !formData.passportNumber) {
+      setError('Please provide your passport number');
       return;
+    }
+    
+    if (formData.idType === 'ghanaCard') {
+      if (!formData.ghanaCardNumber) {
+        setError('Please provide your Ghana Card number');
+        return;
+      }
+      if (!formData.ghanaCardNumber.toUpperCase().startsWith('GHA-')) {
+        setError('Ghana Card number must start with GHA-');
+        return;
+      }
     }
 
     setLoading(true);
@@ -291,15 +305,63 @@ export default function CheckInFormPage() {
 
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-dark mb-2">
-                  Passport/ID Number
+                  Identification Type <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={formData.passportNumber}
-                  onChange={(e) => setFormData({ ...formData, passportNumber: e.target.value })}
-                  className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none"
-                  placeholder="A12345678"
-                />
+                <div className="flex gap-4 mb-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="idType"
+                      value="passport"
+                      checked={formData.idType === 'passport'}
+                      onChange={(e) => setFormData({ ...formData, idType: 'passport' })}
+                      className="w-4 h-4 text-orange focus:ring-orange"
+                    />
+                    <span className="text-sm font-medium text-dark">Passport</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="idType"
+                      value="ghanaCard"
+                      checked={formData.idType === 'ghanaCard'}
+                      onChange={(e) => setFormData({ ...formData, idType: 'ghanaCard' })}
+                      className="w-4 h-4 text-orange focus:ring-orange"
+                    />
+                    <span className="text-sm font-medium text-dark">Ghana Card</span>
+                  </label>
+                </div>
+
+                {formData.idType === 'passport' ? (
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      value={formData.passportNumber}
+                      onChange={(e) => setFormData({ ...formData, passportNumber: e.target.value })}
+                      className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none"
+                      placeholder="e.g., A12345678"
+                    />
+                    <p className="text-xs text-neutral-500 mt-1">
+                      Enter your passport number
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      value={formData.ghanaCardNumber}
+                      onChange={(e) => setFormData({ ...formData, ghanaCardNumber: e.target.value.toUpperCase() })}
+                      className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none"
+                      placeholder="GHA-XXXXXXXXX-X"
+                      pattern="GHA-.*"
+                    />
+                    <p className="text-xs text-neutral-500 mt-1">
+                      Ghana Card number must start with <strong>GHA-</strong>
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
