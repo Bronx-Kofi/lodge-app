@@ -19,6 +19,7 @@ interface BookingWidgetProps {
 export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, cancellationPolicy }: BookingWidgetProps) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [guests, setGuests] = useState(2);
+    const [rooms, setRooms] = useState(1); // Number of rooms to book
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isRedirecting, setIsRedirecting] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -31,7 +32,7 @@ export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, 
         ? Math.ceil((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24))
         : 0;
 
-    const totalPrice = nights * basePrice;
+    const totalPrice = nights * basePrice * rooms; // Multiply by number of rooms
 
     const handleWhatsAppRedirect = () => {
         setIsRedirecting(true);
@@ -43,16 +44,18 @@ export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, 
         // Build WhatsApp message with proper encoding
         let message = `BOOKING INQUIRY\n\n`;
         message += `Room: ${roomTitle}\n`;
+        message += `Number of Rooms: ${rooms}\n`;
         message += `Check-in: ${dateRange?.from ? format(dateRange.from, "EEEE, MMM d, yyyy") : "Flexible"}\n`;
         message += `Check-out: ${dateRange?.to ? format(dateRange.to, "EEEE, MMM d, yyyy") : "Flexible"}\n`;
         
         if (nights > 0) {
             message += `Nights: ${nights}\n`;
-            message += `Total Price: GHS ${totalPrice}\n`;
+            message += `Price per room per night: GHS ${basePrice}\n`;
+            message += `Total Price: GHS ${totalPrice} (${rooms} ${rooms > 1 ? 'rooms' : 'room'} x ${nights} ${nights > 1 ? 'nights' : 'night'})\n`;
         }
         
-        message += `Guests: ${guests} ${guests > 1 ? 'guests' : 'guest'}\n\n`;
-        message += `Is this room available for these dates?`;
+        message += `Total Guests: ${guests} ${guests > 1 ? 'guests' : 'guest'}\n\n`;
+        message += `Are these rooms available for these dates?`;
 
         setTimeout(async () => {
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -168,9 +171,42 @@ export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, 
                     )}
                 </div>
 
+                {/* Number of Rooms */}
+                <div>
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2 block">Number of Rooms</label>
+                    <div className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg border border-neutral-200">
+                        <div className="flex items-center gap-3">
+                            <svg className="text-terracotta" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            <span className="text-sm font-medium">{rooms} Room{rooms > 1 ? 's' : ''}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setRooms(Math.max(1, rooms - 1))}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-neutral-200 hover:border-terracotta text-neutral-600 hover:text-terracotta transition-colors"
+                            >
+                                -
+                            </button>
+                            <button
+                                onClick={() => setRooms(rooms + 1)}
+                                className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-neutral-200 hover:border-terracotta text-neutral-600 hover:text-terracotta transition-colors"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    {rooms > 1 && (
+                        <p className="text-xs text-neutral-500 mt-2">
+                            Booking {rooms} separate rooms • Each guest gets their own room
+                        </p>
+                    )}
+                </div>
+
                 {/* Guest Selection */}
                 <div>
-                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2 block">Guests</label>
+                    <label className="text-xs font-bold uppercase tracking-widest text-neutral-400 mb-2 block">Total Guests</label>
                     <div className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg border border-neutral-200">
                         <div className="flex items-center gap-3">
                             <Users size={18} className="text-terracotta" />
@@ -184,20 +220,35 @@ export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, 
                                 -
                             </button>
                             <button
-                                onClick={() => setGuests(Math.min(capacity, guests + 1))}
+                                onClick={() => setGuests(guests + 1)}
                                 className="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-neutral-200 hover:border-terracotta text-neutral-600 hover:text-terracotta transition-colors"
                             >
                                 +
                             </button>
                         </div>
                     </div>
+                    <p className="text-xs text-neutral-500 mt-2">
+                        Max {capacity} guests per room • Total capacity: {rooms * capacity} guests
+                    </p>
                 </div>
 
                 {/* Price Summary */}
                 {nights > 0 && (
-                    <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
-                        <span className="text-sm text-neutral-500">GH₵{basePrice} x {nights} nights</span>
-                        <span className="text-lg font-serif font-medium text-neutral-800">GH₵{totalPrice}</span>
+                    <div className="pt-4 border-t border-neutral-100 space-y-2">
+                        <div className="flex items-center justify-between text-sm text-neutral-600">
+                            <span>GH₵{basePrice} x {nights} {nights > 1 ? 'nights' : 'night'}</span>
+                            <span>GH₵{basePrice * nights}</span>
+                        </div>
+                        {rooms > 1 && (
+                            <div className="flex items-center justify-between text-sm text-neutral-600">
+                                <span>x {rooms} rooms</span>
+                                <span>GH₵{basePrice * nights * rooms}</span>
+                            </div>
+                        )}
+                        <div className="flex items-center justify-between pt-2 border-t border-neutral-100">
+                            <span className="font-semibold text-neutral-800">Total</span>
+                            <span className="text-lg font-serif font-medium text-terracotta">GH₵{totalPrice}</span>
+                        </div>
                     </div>
                 )}
 

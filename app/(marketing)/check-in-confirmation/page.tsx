@@ -98,17 +98,6 @@ function CheckInConfirmationContent() {
             </div>
           </div>
 
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <div className="flex gap-3">
-              <div className="text-2xl">📧</div>
-              <div>
-                <div className="font-semibold text-dark mb-1">Confirmation Email Sent</div>
-                <div className="text-sm text-neutral-600">
-                  A confirmation has been sent to <strong>{email}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
         </motion.div>
 
         {/* Important Information */}
