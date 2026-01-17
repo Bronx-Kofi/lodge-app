@@ -24,6 +24,12 @@ export interface Room {
     content: string;
   }[];
   cancellationPolicy?: string;
+  // Availability info (added at runtime)
+  availabilityStatus?: {
+    isAvailable: boolean;
+    nextAvailableDate?: string;
+    hasUpcomingBookings: boolean;
+  };
 }
 
 /**

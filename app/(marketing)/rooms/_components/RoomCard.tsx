@@ -9,6 +9,8 @@ interface RoomCardProps {
 }
 
 export function RoomCard({ room }: RoomCardProps) {
+    const availability = room.availabilityStatus;
+    
     return (
         <Link
             href={`/rooms/${room.slug.current}`}
@@ -24,6 +26,20 @@ export function RoomCard({ room }: RoomCardProps) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
 
+                {/* Availability Badge */}
+                {availability && (
+                    <div className="absolute top-3 left-3 z-10">
+                        {availability.isAvailable ? (
+                            <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                Available
+                            </div>
+                        ) : (
+                            <div className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                Booked
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Content - Below Image */}
@@ -43,6 +59,13 @@ export function RoomCard({ room }: RoomCardProps) {
                 <p className="text-dark-muted text-sm mb-1">
                     Up to {room.capacity} guests
                 </p>
+
+                {/* Availability Status */}
+                {availability && !availability.isAvailable && availability.nextAvailableDate && (
+                    <p className="text-orange text-xs font-medium mb-1">
+                        Next available: {new Date(availability.nextAvailableDate).toLocaleDateString()}
+                    </p>
+                )}
 
                 <div className="flex items-baseline gap-1 mt-1">
                     <span className="font-bold text-lg text-dark">GH₵{room.price}</span>

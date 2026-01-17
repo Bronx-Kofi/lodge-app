@@ -6,6 +6,7 @@ import { cleanPhoneNumber } from "@/lib/utils/phone";
 import { RoomGallery } from "./_components/RoomGallery";
 import { transformGalleryData } from "@/lib/rooms/gallery-helpers";
 import { BookingWidget } from "./_components/BookingWidget";
+import { getRoomAvailabilityStatus } from "@/lib/rooms/availability-helpers";
 
 // Generate static params for all rooms
 export async function generateStaticParams() {
@@ -29,6 +30,9 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ slu
         notFound();
     }
 
+    // Get availability status
+    const availabilityStatus = await getRoomAvailabilityStatus(room._id);
+
     const rawNumber = settings?.whatsapp || settings?.whatsappNumbers?.main || "233000000000";
     const whatsappNumber = cleanPhoneNumber(rawNumber);
 
@@ -46,11 +50,32 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ slu
                 <div className="mb-10">
                     <p className="text-ochre-500 font-medium tracking-wide uppercase text-sm mb-2">{room.tagline}</p>
                     <h1 className="font-serif text-4xl md:text-5xl text-terracotta mb-4">{room.title}</h1>
-                    <div className="flex items-center gap-4 text-neutral-600 text-sm">
+                    <div className="flex items-center gap-4 text-neutral-600 text-sm flex-wrap">
                         <span>Up to {room.capacity} Guests</span>
                         <span className="w-1 h-1 bg-neutral-300 rounded-full" />
                         <span>GH₵{room.price} / Night</span>
+                        <span className="w-1 h-1 bg-neutral-300 rounded-full" />
+                        {availabilityStatus.isAvailable ? (
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-semibold">
+                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                Available Now
+                            </span>
+                        ) : (
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-red-700 rounded-full text-xs font-semibold">
+                                <span className="w-2 h-2 bg-red-500 rounded-full" />
+                                Currently Booked
+                            </span>
+                        )}
                     </div>
+                    {!availabilityStatus.isAvailable && availabilityStatus.nextAvailableDate && (
+                        <p className="text-sm text-orange mt-3 font-medium">
+                            Next available from {new Date(availabilityStatus.nextAvailableDate).toLocaleDateString('en-US', { 
+                                month: 'long', 
+                                day: 'numeric', 
+                                year: 'numeric' 
+                            })}
+                        </p>
+                    )}
                 </div>
 
                 {/* Gallery */}

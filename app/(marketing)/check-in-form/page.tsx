@@ -548,28 +548,6 @@ export default function CheckInFormPage() {
             </div>
           </motion.div>
 
-          {/* Visa Receipt Option */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-2xl p-6"
-          >
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={formData.needsVisaReceipt}
-                onChange={(e) => setFormData({ ...formData, needsVisaReceipt: e.target.checked })}
-                className="mt-1"
-              />
-              <div>
-                <span className="font-bold text-dark text-lg">Send me an official booking receipt</span>
-                <p className="text-sm text-neutral-700 mt-1">
-                  Receive a professional confirmation document with all booking details
-                </p>
-              </div>
-            </label>
-          </motion.div>
 
           {/* Submit Button */}
           <motion.div
