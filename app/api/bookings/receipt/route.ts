@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
           },
           selectedRoomTitle,
           nightlyRate,
+          totalPrice,
           paymentDeclaration,
           telecelPaymentNumber,
           telecelTransactionId,
@@ -179,7 +180,21 @@ export async function POST(request: NextRequest) {
         nightlyRate = typeof fallbackRoom?.price === 'number' ? fallbackRoom.price : null;
       }
 
-      const computedTotal = nightlyRate ? nightlyRate * nights : null;
+      // Use stored totalPrice if available (includes all fees), otherwise calculate basic total
+      const numberOfRooms = checkInForm.numberOfRooms || 1;
+      let finalTotal;
+      
+      if (typeof checkInForm.totalPrice === 'number' && checkInForm.totalPrice > 0) {
+        // Use the pre-calculated total from check-in form (includes all fees and taxes)
+        finalTotal = checkInForm.totalPrice;
+        console.log(`[Receipt API] Using stored totalPrice: GH₵${finalTotal}`);
+      } else if (nightlyRate && nights > 0) {
+        // Fallback: calculate basic total if totalPrice not available (legacy data)
+        finalTotal = nightlyRate * nights * numberOfRooms;
+        console.log(`[Receipt API] Calculated fallback total: GH₵${finalTotal} (${nightlyRate} × ${nights} × ${numberOfRooms})`);
+      } else {
+        finalTotal = null;
+      }
 
       // Convert check-in form to booking format
       booking = {
@@ -200,13 +215,13 @@ export async function POST(request: NextRequest) {
         nationality: checkInForm.nationality || '',
         passportNumber: checkInForm.passportNumber || '',
         ghanaCardNumber: checkInForm.ghanaCardNumber || '',
-        numberOfRooms: checkInForm.numberOfRooms || 1,
+        numberOfRooms: numberOfRooms,
         checkIn: checkInForm.checkInDate,
         checkOut: checkInForm.checkOutDate,
         adults: checkInForm.numberOfGuests || 1,
         children: 0,
-        // For receipts, totalPrice should be the full stay total (not nightly rate)
-        totalPrice: computedTotal,
+        // For receipts, totalPrice should be the full stay total with all fees
+        totalPrice: finalTotal,
         status: checkInForm.status || 'confirmed',
         // Map declaration to a paymentStatus for UI
         paymentStatus: checkInForm.paymentDeclaration === 'paid_telecel' ? 'paid' : 'pending',
