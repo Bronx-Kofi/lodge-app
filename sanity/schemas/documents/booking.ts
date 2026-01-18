@@ -53,6 +53,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'numberOfRooms',
+      title: 'Number of Rooms',
+      type: 'number',
+      description: 'Number of separate rooms booked in this reservation',
+      validation: (Rule) => Rule.required().min(1).integer(),
+      initialValue: 1,
+    }),
+    defineField({
       name: 'adults',
       title: 'Number of Adults',
       type: 'number',

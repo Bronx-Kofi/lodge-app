@@ -3,7 +3,7 @@ import { client } from '@/sanity/lib/client';
 
 export async function POST(request: NextRequest) {
   try {
-    const { roomId, checkIn, checkOut, adults, children } = await request.json();
+    const { roomId, checkIn, checkOut, adults, children, numberOfRooms } = await request.json();
 
     // Validate input
     if (!roomId || !checkIn || !checkOut) {
@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const rooms = numberOfRooms || 1; // Default to 1 room if not specified
     let basePrice = room.price * nights;
 
     // Check for pricing rules
@@ -99,27 +100,39 @@ export async function POST(request: NextRequest) {
       basePrice = basePrice * (1 + totalModifier / 100);
     }
 
-    // Calculate fees
-    const cleaningFee = 50; // Fixed cleaning fee
-    const serviceFee = Math.round(basePrice * 0.10); // 10% service fee
-    const taxes = Math.round((basePrice + cleaningFee + serviceFee) * 0.125); // 12.5% VAT
+    // Calculate fees (per room)
+    const cleaningFeePerRoom = 50; // Fixed cleaning fee per room
+    const totalCleaningFee = cleaningFeePerRoom * rooms;
+    
+    // Service fee on all rooms
+    const serviceFee = Math.round(basePrice * rooms * 0.10); // 10% service fee
+    
+    // Calculate subtotal before tax
+    const subtotalBeforeTax = Math.round(basePrice * rooms) + totalCleaningFee + serviceFee;
+    
+    // VAT on everything
+    const taxes = Math.round(subtotalBeforeTax * 0.125); // 12.5% VAT
 
-    const total = Math.round(basePrice + cleaningFee + serviceFee + taxes);
+    const total = subtotalBeforeTax + taxes;
 
     return NextResponse.json({
       roomTitle: room.title,
       nights,
+      numberOfRooms: rooms,
       baseRate: room.price,
       basePrice: Math.round(basePrice),
-      cleaningFee,
+      basePriceTotal: Math.round(basePrice * rooms),
+      cleaningFee: totalCleaningFee,
+      cleaningFeePerRoom: cleaningFeePerRoom,
       serviceFee,
       taxes,
       total,
       appliedRules,
       breakdown: {
-        nightlyRate: `GH₵${room.price} × ${nights} nights`,
-        subtotal: Math.round(basePrice),
-        fees: cleaningFee + serviceFee,
+        nightlyRate: `GH₵${room.price} × ${nights} ${nights === 1 ? 'night' : 'nights'}`,
+        roomsMultiplier: rooms > 1 ? `× ${rooms} ${rooms === 1 ? 'room' : 'rooms'}` : null,
+        subtotal: Math.round(basePrice * rooms),
+        fees: totalCleaningFee + serviceFee,
         taxAmount: taxes,
       },
     });
