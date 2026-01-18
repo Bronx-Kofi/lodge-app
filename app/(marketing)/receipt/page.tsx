@@ -334,34 +334,24 @@ function ReceiptContent() {
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
                 <div>
-                  <div className="font-medium text-dark">Room Rate</div>
+                  <div className="font-medium text-dark">Room Rate (including fees)</div>
                   <div className="text-sm text-neutral-600">
-                    GH₵{pricePerNight.toLocaleString()} × {nights} {nights === 1 ? 'night' : 'nights'}
-                    {booking.numberOfRooms > 1 && ` × ${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'}`}
+                    {booking.numberOfRooms > 1 
+                      ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
+                      : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
+                    }
                   </div>
                 </div>
                 <div className="font-semibold text-dark">
-                  {computedTotal != null ? `GH₵${(pricePerNight * nights * (booking.numberOfRooms || 1)).toLocaleString()}` : 'Contact property'}
+                  {computedTotal != null ? `GH₵${Math.round(booking.totalPrice / 1.125).toLocaleString()}` : 'Contact property'}
                 </div>
               </div>
               
               {computedTotal != null && (
-                <>
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="text-neutral-600">Cleaning Fee{booking.numberOfRooms > 1 ? ` (GH₵50 × ${booking.numberOfRooms} rooms)` : ''}</div>
-                    <div className="text-dark">GH₵{(50 * (booking.numberOfRooms || 1)).toLocaleString()}</div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="text-neutral-600">Service Fee (10%)</div>
-                    <div className="text-dark">GH₵{Math.round((pricePerNight * nights * (booking.numberOfRooms || 1)) * 0.10).toLocaleString()}</div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="text-neutral-600">VAT (12.5%)</div>
-                    <div className="text-dark">GH₵{Math.round((pricePerNight * nights * (booking.numberOfRooms || 1) + 50 * (booking.numberOfRooms || 1) + Math.round((pricePerNight * nights * (booking.numberOfRooms || 1)) * 0.10)) * 0.125).toLocaleString()}</div>
-                  </div>
-                </>
+                <div className="flex justify-between items-center text-sm">
+                  <div className="text-neutral-600">VAT (12.5%)</div>
+                  <div className="text-dark">GH₵{Math.round(booking.totalPrice - (booking.totalPrice / 1.125)).toLocaleString()}</div>
+                </div>
               )}
               
               <div className="border-t-2 border-neutral-200 pt-3 mt-3">

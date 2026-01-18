@@ -355,40 +355,26 @@ function VisaReceiptContent() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="font-medium text-dark">Room Rate</div>
+                    <div className="font-medium text-dark">Room Rate (including fees)</div>
                     <div className="text-sm text-neutral-600">
-                      {booking.room?.price
-                        ? `GH₵ ${booking.room.price.toLocaleString()}`
-                        : booking.totalPrice && nights > 0
-                          ? `GH₵ ${Math.round(booking.totalPrice / nights).toLocaleString()}`
-                          : 'Standard rate'} × {nights} {nights === 1 ? 'night' : 'nights'}
-                      {booking.numberOfRooms > 1 && ` × ${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'}`}
+                      {booking.numberOfRooms > 1 
+                        ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${booking.room?.price ? booking.room.price.toLocaleString() : (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights).toLocaleString() : 'Rate')}/night`
+                        : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${booking.room?.price ? booking.room.price.toLocaleString() : (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights).toLocaleString() : 'Rate')}/night`
+                      }
                     </div>
                   </div>
                   <div className="font-semibold text-dark">
-                    {booking.room?.price && nights > 0
-                      ? `GH₵ ${(booking.room.price * nights * (booking.numberOfRooms || 1)).toLocaleString()}`
+                    {booking.totalPrice
+                      ? `GH₵ ${Math.round(booking.totalPrice / 1.125).toLocaleString()}`
                       : 'See total'}
                   </div>
                 </div>
                 
-                {booking.room?.price && nights > 0 && (
-                  <>
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="text-neutral-600">Cleaning Fee{booking.numberOfRooms > 1 ? ` (GH₵50 × ${booking.numberOfRooms} rooms)` : ''}</div>
-                      <div className="text-dark">GH₵ {(50 * (booking.numberOfRooms || 1)).toLocaleString()}</div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="text-neutral-600">Service Fee (10%)</div>
-                      <div className="text-dark">GH₵ {Math.round((booking.room.price * nights * (booking.numberOfRooms || 1)) * 0.10).toLocaleString()}</div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="text-neutral-600">VAT (12.5%)</div>
-                      <div className="text-dark">GH₵ {Math.round((booking.room.price * nights * (booking.numberOfRooms || 1) + 50 * (booking.numberOfRooms || 1) + Math.round((booking.room.price * nights * (booking.numberOfRooms || 1)) * 0.10)) * 0.125).toLocaleString()}</div>
-                    </div>
-                  </>
+                {booking.totalPrice && (
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="text-neutral-600">VAT (12.5%)</div>
+                    <div className="text-dark">GH₵ {Math.round(booking.totalPrice - (booking.totalPrice / 1.125)).toLocaleString()}</div>
+                  </div>
                 )}
               </div>
               
