@@ -107,6 +107,13 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
+      name: 'numberOfRooms',
+      title: 'Number of Rooms',
+      type: 'number',
+      description: 'Auto-calculated based on guests and room capacity',
+      initialValue: 1,
+    }),
+    defineField({
       name: 'roomPreference',
       title: 'Room Preference (legacy)',
       type: 'string',
@@ -130,6 +137,12 @@ export default defineType({
       title: 'Nightly Rate',
       type: 'number',
       description: 'Stored nightly rate at time of submission (for accurate receipts).',
+    }),
+    defineField({
+      name: 'totalPrice',
+      title: 'Total Price',
+      type: 'number',
+      description: 'Auto-calculated total including all rooms, fees and taxes',
     }),
     defineField({
       name: 'paymentDeclaration',

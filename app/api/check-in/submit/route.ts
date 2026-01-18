@@ -129,6 +129,46 @@ export async function POST(request: NextRequest) {
     
     console.log('[Check-In API] Creating check-in form document:', checkInReference);
 
+    // Calculate number of rooms needed based on guest count and room capacity
+    let numberOfRooms = 1;
+    let roomCapacity = 2; // Default capacity
+    
+    if (selectedRoomId) {
+      try {
+        const roomData = await client.fetch(
+          `*[_type == "room" && _id == $roomId][0]{ capacity }`,
+          { roomId: selectedRoomId }
+        );
+        if (roomData?.capacity) {
+          roomCapacity = roomData.capacity;
+        }
+      } catch (err) {
+        console.error('Error fetching room capacity:', err);
+      }
+    }
+    
+    // Calculate required rooms: ceil(numberOfGuests / roomCapacity)
+    if (numberOfGuests > roomCapacity) {
+      numberOfRooms = Math.ceil(numberOfGuests / roomCapacity);
+      console.log(`[Check-In API] ${numberOfGuests} guests need ${numberOfRooms} rooms (capacity: ${roomCapacity})`);
+    }
+    
+    // Calculate total price if we have the nightly rate
+    let calculatedTotal;
+    if (nightlyRate && checkInDate && checkOutDate) {
+      const nights = Math.ceil(
+        (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24)
+      );
+      // Base calculation: nights × rate × rooms
+      const baseTotal = nights * nightlyRate * numberOfRooms;
+      // Add fees: cleaning (50/room), service (10%), VAT (12.5%)
+      const cleaningFee = 50 * numberOfRooms;
+      const serviceFee = Math.round(baseTotal * 0.10);
+      const subtotal = baseTotal + cleaningFee + serviceFee;
+      calculatedTotal = Math.round(subtotal * 1.125); // Add 12.5% VAT
+      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate})`);
+    }
+
     const checkInSubmission = await client.create({
       _type: 'checkInForm',
       checkInReference,
@@ -145,10 +185,12 @@ export async function POST(request: NextRequest) {
       checkInDate,
       checkOutDate,
       numberOfGuests: numberOfGuests || 1,
+      numberOfRooms,
       roomPreference: roomPreference || '',
       selectedRoom: selectedRoomId ? { _type: 'reference', _ref: selectedRoomId } : undefined,
       selectedRoomTitle: selectedRoomTitle || '',
       nightlyRate: typeof nightlyRate === 'number' ? nightlyRate : undefined,
+      totalPrice: calculatedTotal,
       paymentDeclaration: paymentDeclaration || 'not_paid',
       telecelPaymentNumber: telecelPaymentNumber || '',
       telecelTransactionId: telecelTransactionId || '',
