@@ -355,27 +355,28 @@ function VisaReceiptContent() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="font-medium text-dark">Room Rate (including fees)</div>
+                    <div className="font-medium text-dark">Room Rate</div>
                     <div className="text-sm text-neutral-600">
-                      {booking.numberOfRooms > 1 
-                        ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${booking.room?.price ? booking.room.price.toLocaleString() : (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights).toLocaleString() : 'Rate')}/night`
-                        : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${booking.room?.price ? booking.room.price.toLocaleString() : (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights).toLocaleString() : 'Rate')}/night`
-                      }
+                      {(() => {
+                        const pricePerNight = booking.room?.price || (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null);
+                        if (booking.numberOfRooms > 1) {
+                          return `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight ? pricePerNight.toLocaleString() : 'Rate'}/night`;
+                        } else {
+                          return `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight ? pricePerNight.toLocaleString() : 'Rate'}/night`;
+                        }
+                      })()}
                     </div>
                   </div>
                   <div className="font-semibold text-dark">
-                    {booking.totalPrice
-                      ? `GH₵ ${Math.round(booking.totalPrice / 1.125).toLocaleString()}`
-                      : 'See total'}
+                    {(() => {
+                      const pricePerNight = booking.room?.price || (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null);
+                      if (pricePerNight && nights > 0) {
+                        return `GH₵ ${(pricePerNight * nights * (booking.numberOfRooms || 1)).toLocaleString()}`;
+                      }
+                      return 'See total';
+                    })()}
                   </div>
                 </div>
-                
-                {booking.totalPrice && (
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="text-neutral-600">VAT (12.5%)</div>
-                    <div className="text-dark">GH₵ {Math.round(booking.totalPrice - (booking.totalPrice / 1.125)).toLocaleString()}</div>
-                  </div>
-                )}
               </div>
               
               <div className="border-t-2 border-neutral-200 pt-4">

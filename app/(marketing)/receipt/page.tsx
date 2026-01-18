@@ -334,7 +334,7 @@ function ReceiptContent() {
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
                 <div>
-                  <div className="font-medium text-dark">Room Rate (including fees)</div>
+                  <div className="font-medium text-dark">Room Rate</div>
                   <div className="text-sm text-neutral-600">
                     {booking.numberOfRooms > 1 
                       ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
@@ -343,16 +343,9 @@ function ReceiptContent() {
                   </div>
                 </div>
                 <div className="font-semibold text-dark">
-                  {computedTotal != null ? `GH₵${Math.round(booking.totalPrice / 1.125).toLocaleString()}` : 'Contact property'}
+                  {computedTotal != null ? `GH₵${(pricePerNight * nights * (booking.numberOfRooms || 1)).toLocaleString()}` : 'Contact property'}
                 </div>
               </div>
-              
-              {computedTotal != null && (
-                <div className="flex justify-between items-center text-sm">
-                  <div className="text-neutral-600">VAT (12.5%)</div>
-                  <div className="text-dark">GH₵{Math.round(booking.totalPrice - (booking.totalPrice / 1.125)).toLocaleString()}</div>
-                </div>
-              )}
               
               <div className="border-t-2 border-neutral-200 pt-3 mt-3">
                 <div className="flex justify-between items-center">
