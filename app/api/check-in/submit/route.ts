@@ -159,13 +159,9 @@ export async function POST(request: NextRequest) {
       const nights = Math.ceil(
         (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24)
       );
-      // Base calculation: nights × rate × rooms
-      const baseTotal = nights * nightlyRate * numberOfRooms;
-      // Add fees: cleaning (50/room), service (10%)
-      const cleaningFee = 50 * numberOfRooms;
-      const serviceFee = Math.round(baseTotal * 0.10);
-      calculatedTotal = baseTotal + cleaningFee + serviceFee;
-      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate} + fees)`);
+      // Simple calculation: nights × rate × rooms (no additional fees)
+      calculatedTotal = nights * nightlyRate * numberOfRooms;
+      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate})`);
     }
 
     const checkInSubmission = await client.create({
