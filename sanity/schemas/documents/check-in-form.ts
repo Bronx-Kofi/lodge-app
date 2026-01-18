@@ -73,8 +73,15 @@ export default defineType({
     }),
     defineField({
       name: 'passportNumber',
-      title: 'Passport/ID Number',
+      title: 'Passport Number',
       type: 'string',
+      description: 'For international guests',
+    }),
+    defineField({
+      name: 'ghanaCardNumber',
+      title: 'Ghana Card Number',
+      type: 'string',
+      description: 'For Ghanaian guests - Ghana Card identification number',
     }),
     defineField({
       name: 'dateOfBirth',

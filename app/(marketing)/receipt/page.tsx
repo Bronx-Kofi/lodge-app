@@ -118,33 +118,57 @@ function ReceiptContent() {
   return (
     <div className="min-h-screen bg-neutral-100 py-8 print:bg-white print:py-0">
       {/* Print Actions - Hidden on print */}
-      <div className="max-w-4xl mx-auto px-6 mb-6 print:hidden">
-        <div className="bg-white rounded-lg shadow-sm p-4 flex justify-between items-center">
-          <div>
-            <h2 className="font-semibold text-dark">Reservation Receipt</h2>
-            <p className="text-sm text-neutral-600">Reference: {booking.bookingReference}</p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handlePrint}
-              className="btn-primary flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Download PDF
-            </button>
-            <a
-              href={`/receipt/visa?reference=${reference}&email=${email}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Visa Application Version
-            </a>
+      <div className="print:hidden sticky top-[72px] sm:top-[80px] z-40 bg-neutral-100/90 backdrop-blur">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3">
+          <div className="bg-white rounded-lg shadow-sm border border-neutral-200 p-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex-1">
+                <h2 className="font-semibold text-dark text-base sm:text-lg">Reservation Receipt</h2>
+                <p className="text-xs sm:text-sm text-neutral-600 mt-1">Reference: {booking.bookingReference}</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full md:w-[360px] md:justify-end">
+                <button
+                  onClick={handlePrint}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-orange px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+                >
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Download PDF
+                </button>
+
+                <button
+                  onClick={() => window.open(`/receipt/visa?reference=${reference}&email=${email}`, '_blank')}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-800 shadow-sm hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400"
+                >
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  View Visa Receipt
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -216,22 +240,26 @@ function ReceiptContent() {
                 </div>
               </div>
               <div className="space-y-3">
+                <div>
+                  <div className="text-sm text-neutral-500 mb-1">Booking Reference</div>
+                  <div className="font-bold text-orange">{booking.bookingReference}</div>
+                </div>
                 {booking.nationality && (
                   <div>
                     <div className="text-sm text-neutral-500 mb-1">Nationality</div>
                     <div className="font-medium text-dark">{booking.nationality}</div>
                   </div>
                 )}
-                {booking.passportNumber && (
+                {(booking.ghanaCardNumber || booking.passportNumber) && (
                   <div>
-                    <div className="text-sm text-neutral-500 mb-1">Passport Number</div>
-                    <div className="font-medium text-dark">{booking.passportNumber}</div>
+                    <div className="text-sm text-neutral-500 mb-1">
+                      {booking.ghanaCardNumber ? 'Ghana Card Number' : 'Passport Number'}
+                    </div>
+                    <div className="font-medium text-dark">
+                      {booking.ghanaCardNumber || booking.passportNumber}
+                    </div>
                   </div>
                 )}
-                <div>
-                  <div className="text-sm text-neutral-500 mb-1">Booking Reference</div>
-                  <div className="font-bold text-orange">{booking.bookingReference}</div>
-                </div>
               </div>
             </div>
           </div>
@@ -361,10 +389,6 @@ function ReceiptContent() {
               <div className="flex gap-2">
                 <span className="text-orange font-bold">•</span>
                 <span>Please bring a valid photo ID and this receipt upon check-in.</span>
-              </div>
-              <div className="flex gap-2">
-                <span className="text-orange font-bold">•</span>
-                <span>For international guests: This receipt can be used for visa application purposes.</span>
               </div>
               <div className="flex gap-2">
                 <span className="text-orange font-bold">•</span>

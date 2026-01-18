@@ -142,6 +142,12 @@ export default defineType({
       description: 'Optional: For international guests requiring visa documentation',
     }),
     defineField({
+      name: 'ghanaCardNumber',
+      title: 'Ghana Card Number',
+      type: 'string',
+      description: 'Optional: For Ghanaian guests - Ghana Card identification number',
+    }),
+    defineField({
       name: 'receiptNumber',
       title: 'Receipt Number',
       type: 'string',

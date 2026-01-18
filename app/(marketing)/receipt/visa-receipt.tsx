@@ -187,9 +187,6 @@ function VisaReceiptContent() {
               <h1 className="text-2xl font-bold text-dark uppercase tracking-wide">
                 Hotel Booking Confirmation
               </h1>
-              <p className="text-lg font-semibold text-neutral-600 mt-1">
-                For Visa Application Purposes
-              </p>
             </div>
 
             <div className="border-2 border-neutral-300 p-4 bg-neutral-50">
@@ -227,7 +224,9 @@ function VisaReceiptContent() {
             <div className="text-neutral-800 leading-relaxed space-y-3">
               <p>
                 This is to confirm that <strong>{booking.guestName}</strong>
-                {booking.passportNumber && <>, holding passport number <strong>{booking.passportNumber}</strong></>}
+                {(booking.ghanaCardNumber || booking.passportNumber) && (
+                  <>, holding {booking.ghanaCardNumber ? 'Ghana Card number' : 'passport number'} <strong>{booking.ghanaCardNumber || booking.passportNumber}</strong></>
+                )}
                 {booking.nationality && <>, nationality <strong>{booking.nationality}</strong></>},
                 has a <strong className="text-orange">CONFIRMED AND GUARANTEED</strong> reservation at{' '}
                 <strong>{siteSettings?.title || 'Miky Hillside Lodge'}</strong>.
@@ -281,10 +280,14 @@ function VisaReceiptContent() {
                     <div className="flex-1 font-medium text-dark">{booking.nationality}</div>
                   </div>
                 )}
-                {booking.passportNumber && (
+                {(booking.ghanaCardNumber || booking.passportNumber) && (
                   <div className="flex">
-                    <div className="w-40 text-sm text-neutral-600 font-semibold">Passport No:</div>
-                    <div className="flex-1 font-medium text-dark">{booking.passportNumber}</div>
+                    <div className="w-40 text-sm text-neutral-600 font-semibold">
+                      {booking.ghanaCardNumber ? 'Ghana Card No:' : 'Passport No:'}
+                    </div>
+                    <div className="flex-1 font-medium text-dark">
+                      {booking.ghanaCardNumber || booking.passportNumber}
+                    </div>
                   </div>
                 )}
                 <div className="flex">
