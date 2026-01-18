@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
         nationality: checkInForm.nationality || '',
         passportNumber: checkInForm.passportNumber || '',
         ghanaCardNumber: checkInForm.ghanaCardNumber || '',
-        numberOfRooms: checkInForm.numberOfRooms || booking.numberOfRooms || 1,
+        numberOfRooms: checkInForm.numberOfRooms || 1,
         checkIn: checkInForm.checkInDate,
         checkOut: checkInForm.checkOutDate,
         adults: checkInForm.numberOfGuests || 1,
