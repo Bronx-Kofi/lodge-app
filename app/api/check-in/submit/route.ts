@@ -161,12 +161,11 @@ export async function POST(request: NextRequest) {
       );
       // Base calculation: nights × rate × rooms
       const baseTotal = nights * nightlyRate * numberOfRooms;
-      // Add fees: cleaning (50/room), service (10%), VAT (12.5%)
+      // Add fees: cleaning (50/room), service (10%)
       const cleaningFee = 50 * numberOfRooms;
       const serviceFee = Math.round(baseTotal * 0.10);
-      const subtotal = baseTotal + cleaningFee + serviceFee;
-      calculatedTotal = Math.round(subtotal * 1.125); // Add 12.5% VAT
-      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate})`);
+      calculatedTotal = baseTotal + cleaningFee + serviceFee;
+      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate} + fees)`);
     }
 
     const checkInSubmission = await client.create({
