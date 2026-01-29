@@ -56,7 +56,8 @@ const landingPageQuery = groq`*[_type == "homepage"][0] {
         title,
         slug,
         tagline,
-        price,
+        priceMin,
+        priceMax,
         capacity,
         image {
             asset-> {
