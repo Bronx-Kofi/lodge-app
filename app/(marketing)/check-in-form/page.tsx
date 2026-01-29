@@ -465,7 +465,7 @@ export default function CheckInFormPage() {
                       ...formData,
                       selectedRoomId: roomId,
                       selectedRoomTitle: room?.title || '',
-                      nightlyRate: room?.price || 0,
+                      nightlyRate: 0, // Dynamic pricing - no fixed rate
                     });
                   }}
                   className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange focus:border-orange outline-none bg-white"
