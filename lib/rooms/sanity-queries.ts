@@ -8,6 +8,8 @@ export interface Room {
   slug: { current: string };
   tagline: string;
   capacity: number;
+  priceMin: number;
+  priceMax: number;
   intro: string;
   description: any[]; // Block content
   amenities: string[];
@@ -28,12 +30,6 @@ export interface Room {
     isAvailable: boolean;
     nextAvailableDate?: string;
     hasUpcomingBookings: boolean;
-  };
-  // Dynamic pricing - calculated at runtime
-  priceRange?: {
-    min: number;
-    max: number;
-    currency: string;
   };
 }
 
@@ -60,12 +56,14 @@ export function getImageUrl(imageRef: any): string {
   return url || "/hero-fallback.jpg";
 }
 
-const roomsQuery = groq`*[_type == "roomSimplified"] | order(title asc) {
+const roomsQuery = groq`*[_type == "roomSimplified"] | order(priceMin asc) {
   _id,
   title,
   slug,
   tagline,
   capacity,
+  priceMin,
+  priceMax,
   intro,
   description,
   amenities,
@@ -114,6 +112,8 @@ const roomBySlugQuery = groq`*[_type == "roomSimplified" && slug.current == $slu
   slug,
   tagline,
   capacity,
+  priceMin,
+  priceMax,
   intro,
   description,
   amenities,

@@ -14,7 +14,8 @@ export default defineType({
   groups: [
     { name: 'basic', title: '1. Basic Info' },
     { name: 'photos', title: '2. Photos' },
-    { name: 'capacity', title: '3. Who Can Stay' },
+    { name: 'pricing', title: '3. Price Range' },
+    { name: 'capacity', title: '4. Who Can Stay' },
     { name: 'amenities', title: '5. What\'s Included' },
     { name: 'details', title: '6. Additional Details' },
   ],
@@ -97,7 +98,23 @@ export default defineType({
       group: 'photos',
     }),
 
-    // GROUP 3: PRICING - Removed (now using dynamic pricing rules)
+    // GROUP 3: PRICING - Price Range
+    defineField({
+      name: "priceMin",
+      title: "Minimum Price (GH₵/night)",
+      type: "number",
+      description: "Starting price for this room. Example: 200",
+      validation: (Rule) => Rule.required().positive(),
+      group: 'pricing',
+    }),
+    defineField({
+      name: "priceMax",
+      title: "Maximum Price (GH₵/night)",
+      type: "number",
+      description: "Maximum price for peak seasons. Example: 350",
+      validation: (Rule) => Rule.required().positive(),
+      group: 'pricing',
+    }),
 
     // GROUP 4: CAPACITY
     defineField({
@@ -205,11 +222,16 @@ export default defineType({
       title: "title",
       subtitle: "tagline",
       media: "image",
+      priceMin: "priceMin",
+      priceMax: "priceMax",
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ title, subtitle, media, priceMin, priceMax }) {
+      const priceRange = priceMin && priceMax 
+        ? `GH₵${priceMin} - GH₵${priceMax}/night`
+        : subtitle;
       return {
         title: title || "Untitled Room",
-        subtitle: subtitle || "Dynamic pricing enabled",
+        subtitle: priceRange || "No price range set",
         media,
       };
     },

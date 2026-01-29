@@ -53,7 +53,7 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ slu
                     <div className="flex items-center gap-4 text-neutral-600 text-sm flex-wrap">
                         <span>Up to {room.capacity} Guests</span>
                         <span className="w-1 h-1 bg-neutral-300 rounded-full" />
-                        <span className="text-ochre-600 font-medium">Dynamic pricing - select dates below</span>
+                        <span className="text-ochre-600 font-semibold">GH₵{room.priceMin} - GH₵{room.priceMax} per night</span>
                         <span className="w-1 h-1 bg-neutral-300 rounded-full" />
                         {availabilityStatus.isAvailable ? (
                             <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-semibold">
@@ -137,7 +137,8 @@ export default async function RoomDetailPage({ params }: { params: Promise<{ slu
                         <div className="sticky top-32">
                             <BookingWidget
                                 roomTitle={room.title}
-                                basePrice={0}
+                                basePrice={room.priceMin}
+                                priceMax={room.priceMax}
                                 capacity={room.capacity}
                                 whatsappNumber={whatsappNumber}
                                 cancellationPolicy={room.cancellationPolicy}
