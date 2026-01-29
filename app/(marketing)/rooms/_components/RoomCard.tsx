@@ -68,8 +68,16 @@ export function RoomCard({ room }: RoomCardProps) {
                 )}
 
                 <div className="flex items-baseline gap-1 mt-1">
-                    <span className="font-bold text-lg text-dark">GH₵{room.price}</span>
-                    <span className="text-dark-light text-sm">night</span>
+                    {room.priceRange ? (
+                        <>
+                            <span className="font-bold text-lg text-dark">
+                                From GH₵{room.priceRange.min}
+                            </span>
+                            <span className="text-dark-light text-sm">night</span>
+                        </>
+                    ) : (
+                        <span className="text-sm text-dark-muted italic">Select dates for pricing</span>
+                    )}
                 </div>
             </div>
         </Link>

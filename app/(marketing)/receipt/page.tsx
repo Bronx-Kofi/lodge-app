@@ -87,16 +87,12 @@ function ReceiptContent() {
   const computedTotal =
     typeof booking.totalPrice === 'number' && booking.totalPrice > 0
       ? booking.totalPrice
-      : booking.room?.price && nights > 0
-        ? booking.room.price * nights
-        : null;
+      : null;
 
   const pricePerNight =
-    booking.room?.price && booking.room.price > 0
-      ? booking.room.price
-      : computedTotal && nights > 0
-        ? computedTotal / nights
-        : 0;
+    computedTotal && nights > 0
+      ? computedTotal / nights
+      : 0;
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-GB', {

@@ -36,8 +36,8 @@ export default async function DebugRoomsPage() {
                                 <td style={{ padding: '8px' }}>{room.slug.current}</td>
                             </tr>
                             <tr style={{ borderBottom: '1px solid #eee' }}>
-                                <td style={{ padding: '8px', fontWeight: 'bold' }}>Price:</td>
-                                <td style={{ padding: '8px' }}>GHS {room.price}</td>
+                                <td style={{ padding: '8px', fontWeight: 'bold' }}>Pricing:</td>
+                                <td style={{ padding: '8px' }}>Dynamic pricing enabled</td>
                             </tr>
                             <tr style={{ borderBottom: '1px solid #eee' }}>
                                 <td style={{ padding: '8px', fontWeight: 'bold' }}>Capacity:</td>

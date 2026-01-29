@@ -385,9 +385,7 @@ function VisaReceiptContent() {
                   <div className="text-xl font-bold text-orange">
                     {booking.totalPrice
                       ? `GH₵ ${booking.totalPrice.toLocaleString()}`
-                      : booking.room?.price
-                        ? `GH₵ ${(booking.room.price * nights).toLocaleString()}`
-                        : 'Amount on file'}
+                      : 'Amount on file'}
                   </div>
                 </div>
               </div>

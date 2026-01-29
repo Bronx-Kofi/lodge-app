@@ -28,11 +28,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get room base price
+    // Get room info (no price, we use dynamic pricing)
     const room = await client.fetch(
       `*[_type == "roomSimplified" && _id == $roomId][0]{
         title,
-        price,
         capacity
       }`,
       { roomId }
@@ -55,12 +54,12 @@ export async function POST(request: NextRequest) {
     }
 
     const rooms = numberOfRooms || 1; // Default to 1 room if not specified
-    let basePrice = room.price * nights;
 
-    // Check for pricing rules
+    // Get applicable pricing rules (must have base price)
     const pricingRules = await client.fetch(
       `*[_type == "pricingRule" && 
          active == true &&
+         basePrice != null &&
          startDate <= $checkOut &&
          endDate >= $checkIn &&
          (count(rooms) == 0 || $roomId in rooms[]._ref)
@@ -68,11 +67,30 @@ export async function POST(request: NextRequest) {
       { roomId, checkIn, checkOut }
     );
 
-    // Apply pricing rules
+    if (!pricingRules || pricingRules.length === 0) {
+      return NextResponse.json(
+        { error: 'No pricing rules available for selected dates. Please contact us for pricing.' },
+        { status: 400 }
+      );
+    }
+
+    // Use the highest priority rule's base price
+    const primaryRule = pricingRules[0];
+    let basePrice = primaryRule.basePrice * nights;
+    let baseRatePerNight = primaryRule.basePrice;
+
+    // Apply pricing rule modifiers
     let totalModifier = 0;
-    const appliedRules: any[] = [];
+    const appliedRules: any[] = [{
+      name: primaryRule.name,
+      type: 'base',
+      value: primaryRule.basePrice,
+    }];
 
     for (const rule of pricingRules) {
+      // Skip if it's the primary rule (already used for base price)
+      if (rule === primaryRule) continue;
+
       // Check minimum stay requirement
       if (rule.minimumStay && nights < rule.minimumStay) {
         continue;
@@ -119,7 +137,7 @@ export async function POST(request: NextRequest) {
       roomTitle: room.title,
       nights,
       numberOfRooms: rooms,
-      baseRate: room.price,
+      baseRate: baseRatePerNight,
       basePrice: Math.round(basePrice),
       basePriceTotal: Math.round(basePrice * rooms),
       cleaningFee: totalCleaningFee,
@@ -129,7 +147,7 @@ export async function POST(request: NextRequest) {
       total,
       appliedRules,
       breakdown: {
-        nightlyRate: `GH₵${room.price} × ${nights} ${nights === 1 ? 'night' : 'nights'}`,
+        nightlyRate: `GH₵${baseRatePerNight} × ${nights} ${nights === 1 ? 'night' : 'nights'}`,
         roomsMultiplier: rooms > 1 ? `× ${rooms} ${rooms === 1 ? 'room' : 'rooms'}` : null,
         subtotal: Math.round(basePrice * rooms),
         fees: totalCleaningFee + serviceFee,

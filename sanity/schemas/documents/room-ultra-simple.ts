@@ -14,8 +14,7 @@ export default defineType({
   groups: [
     { name: 'basic', title: '1. Basic Info' },
     { name: 'photos', title: '2. Photos' },
-    { name: 'pricing', title: '3. Price' },
-    { name: 'capacity', title: '4. Who Can Stay' },
+    { name: 'capacity', title: '3. Who Can Stay' },
     { name: 'amenities', title: '5. What\'s Included' },
     { name: 'details', title: '6. Additional Details' },
   ],
@@ -98,15 +97,7 @@ export default defineType({
       group: 'photos',
     }),
 
-    // GROUP 3: PRICING
-    defineField({
-      name: "price",
-      title: "Price Per Night (Ghana Cedis)",
-      type: "number",
-      description: "Example: 250 for GHC 250 per night",
-      validation: (Rule) => Rule.required().positive(),
-      group: 'pricing',
-    }),
+    // GROUP 3: PRICING - Removed (now using dynamic pricing rules)
 
     // GROUP 4: CAPACITY
     defineField({
@@ -214,12 +205,11 @@ export default defineType({
       title: "title",
       subtitle: "tagline",
       media: "image",
-      price: "price",
     },
-    prepare({ title, subtitle, media, price }) {
+    prepare({ title, subtitle, media }) {
       return {
         title: title || "Untitled Room",
-        subtitle: price ? `GHC ${price}/night - ${subtitle || ''}` : subtitle,
+        subtitle: subtitle || "Dynamic pricing enabled",
         media,
       };
     },

@@ -39,7 +39,7 @@ export default function CheckInFormPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const [rooms, setRooms] = useState<Array<{ _id: string; title: string; price: number; capacity?: number }>>([]);
+  const [rooms, setRooms] = useState<Array<{ _id: string; title: string; capacity?: number }>>([]);
   const [roomsLoading, setRoomsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -475,7 +475,7 @@ export default function CheckInFormPage() {
                   </option>
                   {rooms.map((room) => (
                     <option key={room._id} value={room._id}>
-                      {room.title} — GH₵ {room.price.toLocaleString()} / night
+                      {room.title} — Dynamic pricing
                     </option>
                   ))}
                 </select>

@@ -15,6 +15,13 @@ export default defineType({
       description: 'e.g., "Christmas Peak Season" or "Weekly Stay Discount"',
     }),
     defineField({
+      name: 'basePrice',
+      title: 'Base Price (GH₵/night)',
+      type: 'number',
+      validation: (Rule) => Rule.required().positive(),
+      description: 'Base nightly rate for this pricing rule',
+    }),
+    defineField({
       name: 'active',
       title: 'Active',
       type: 'boolean',
@@ -101,15 +108,17 @@ export default defineType({
       name: 'name',
       active: 'active',
       type: 'ruleType',
+      basePrice: 'basePrice',
       value: 'modifierValue',
       modifierType: 'modifierType',
     },
-    prepare({ name, active, type, value, modifierType }) {
+    prepare({ name, active, type, basePrice, value, modifierType }) {
       const symbol = modifierType === 'percentage' ? '%' : 'GH₵';
-      const valueText = value > 0 ? `+${value}${symbol}` : `${value}${symbol}`;
+      const valueText = value ? (value > 0 ? `+${value}${symbol}` : `${value}${symbol}`) : '';
+      const priceText = basePrice ? `GH₵${basePrice}/night` : 'No base price';
       return {
         title: name,
-        subtitle: `${type} • ${valueText} • ${active ? 'Active' : 'Inactive'}`,
+        subtitle: `${priceText} • ${type} • ${valueText ? valueText + ' • ' : ''}${active ? 'Active' : 'Inactive'}`,
       };
     },
   },

@@ -11,10 +11,9 @@ const readClient = createClient({
 export async function GET() {
   try {
     const rooms = await readClient.fetch(
-      `*[_type == "roomSimplified"] | order(price asc) {
+      `*[_type == "roomSimplified"] | order(title asc) {
         _id,
         title,
-        price,
         capacity
       }`
     );
