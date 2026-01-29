@@ -42,17 +42,6 @@ export const deadSimpleCMS = (S: StructureBuilder) =>
 
       S.divider(),
 
-      // PRICING
-      S.listItem()
-        .title('Pricing Rules')
-        .child(
-          S.documentTypeList('pricingRule')
-            .title('Manage Pricing Rules')
-            .defaultOrdering([{ field: 'priority', direction: 'desc' }])
-        ),
-
-      S.divider(),
-
       // BOOKINGS & CHECK-IN
       S.listItem()
         .title('Bookings')
