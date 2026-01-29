@@ -84,6 +84,10 @@ function ReceiptContent() {
   const checkInDate = new Date(booking.checkIn);
   const checkOutDate = new Date(booking.checkOut);
   const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Validate dates
+  const hasValidDates = checkOutDate > checkInDate && nights > 0;
+  
   const computedTotal =
     typeof booking.totalPrice === 'number' && booking.totalPrice > 0
       ? booking.totalPrice
@@ -91,7 +95,7 @@ function ReceiptContent() {
 
   const pricePerNight =
     computedTotal && nights > 0
-      ? computedTotal / nights
+      ? Math.round(computedTotal / nights)
       : 0;
 
   const formatDate = (date: Date) => {
@@ -291,7 +295,13 @@ function ReceiptContent() {
               <div className="space-y-3">
                 <div>
                   <div className="text-sm text-neutral-500 mb-1">Number of Nights</div>
-                  <div className="font-semibold text-dark">{nights} {nights === 1 ? 'Night' : 'Nights'}</div>
+                  <div className="font-semibold text-dark">
+                    {hasValidDates ? (
+                      <>{nights} {nights === 1 ? 'Night' : 'Nights'}</>
+                    ) : (
+                      <span className="text-red-600">Invalid dates</span>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <div className="text-sm text-neutral-500 mb-1">Number of Guests</div>
@@ -332,14 +342,17 @@ function ReceiptContent() {
                 <div>
                   <div className="font-medium text-dark">Room Rate</div>
                   <div className="text-sm text-neutral-600">
-                    {booking.numberOfRooms > 1 
-                      ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
-                      : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
-                    }
+                    {hasValidDates && pricePerNight > 0 ? (
+                      booking.numberOfRooms > 1 
+                        ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
+                        : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
+                    ) : (
+                      'Invalid booking data'
+                    )}
                   </div>
                 </div>
                 <div className="font-semibold text-dark">
-                  {computedTotal != null ? `GH₵${(pricePerNight * nights * (booking.numberOfRooms || 1)).toLocaleString()}` : 'Contact property'}
+                  {hasValidDates && computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-red-600 text-sm">Invalid</span>}
                 </div>
               </div>
               
@@ -347,7 +360,7 @@ function ReceiptContent() {
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount</div>
                   <div className="text-2xl font-bold text-orange">
-                    {computedTotal != null ? `GH₵${booking.totalPrice.toLocaleString()}` : 'Contact property'}
+                    {hasValidDates && computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-red-600">Invalid Booking</span>}
                   </div>
                 </div>
                 <div className="text-sm text-neutral-600 mt-2">

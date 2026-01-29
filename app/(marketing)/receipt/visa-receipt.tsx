@@ -90,6 +90,9 @@ function VisaReceiptContent() {
   const checkInDate = new Date(booking.checkIn);
   const checkOutDate = new Date(booking.checkOut);
   const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Validate dates
+  const hasValidDates = checkOutDate > checkInDate && nights > 0;
   const issueDate = new Date();
 
   const formatDate = (date: Date) => {
@@ -242,7 +245,7 @@ function VisaReceiptContent() {
                 </div>
               </div>
               <p>
-                <strong>Duration of stay:</strong> {nights} {nights === 1 ? 'night' : 'nights'}
+                <strong>Duration of stay:</strong> {hasValidDates ? `${nights} ${nights === 1 ? 'night' : 'nights'}` : 'Invalid dates'}
               </p>
               <p>
                 <strong>Accommodation type:</strong> {booking.room.title}
@@ -358,23 +361,22 @@ function VisaReceiptContent() {
                     <div className="font-medium text-dark">Room Rate</div>
                     <div className="text-sm text-neutral-600">
                       {(() => {
-                        const pricePerNight = booking.room?.price || (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null);
+                        if (!hasValidDates) return 'Invalid booking dates';
+                        const pricePerNight = booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null;
+                        if (!pricePerNight) return 'Invalid pricing';
                         if (booking.numberOfRooms > 1) {
-                          return `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight ? pricePerNight.toLocaleString() : 'Rate'}/night`;
+                          return `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`;
                         } else {
-                          return `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight ? pricePerNight.toLocaleString() : 'Rate'}/night`;
+                          return `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`;
                         }
                       })()}
                     </div>
                   </div>
                   <div className="font-semibold text-dark">
-                    {(() => {
-                      const pricePerNight = booking.room?.price || (booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null);
-                      if (pricePerNight && nights > 0) {
-                        return `GH₵ ${(pricePerNight * nights * (booking.numberOfRooms || 1)).toLocaleString()}`;
-                      }
-                      return 'See total';
-                    })()}
+                    {hasValidDates && booking.totalPrice 
+                      ? `GH₵ ${booking.totalPrice.toLocaleString()}`
+                      : <span className="text-red-600 text-sm">Invalid</span>
+                    }
                   </div>
                 </div>
               </div>
@@ -383,9 +385,9 @@ function VisaReceiptContent() {
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount:</div>
                   <div className="text-xl font-bold text-orange">
-                    {booking.totalPrice
+                    {hasValidDates && booking.totalPrice
                       ? `GH₵ ${booking.totalPrice.toLocaleString()}`
-                      : 'Amount on file'}
+                      : <span className="text-red-600">Invalid Booking</span>}
                   </div>
                 </div>
               </div>

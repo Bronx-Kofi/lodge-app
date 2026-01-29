@@ -37,6 +37,90 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate dates
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Check if dates are valid
+    if (isNaN(checkInDate.getTime()) || isNaN(checkOutDate.getTime())) {
+      return NextResponse.json(
+        { error: 'Invalid date format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if check-out is after check-in
+    if (checkOutDate <= checkInDate) {
+      return NextResponse.json(
+        { error: 'Check-out date must be after check-in date' },
+        { status: 400 }
+      );
+    }
+
+    // Check if check-in is not in the past
+    if (checkInDate < today) {
+      return NextResponse.json(
+        { error: 'Check-in date cannot be in the past' },
+        { status: 400 }
+      );
+    }
+
+    // Calculate nights
+    const nights = Math.ceil(
+      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    // Validate number of nights (minimum 1, maximum 90)
+    if (nights < 1) {
+      return NextResponse.json(
+        { error: 'Booking must be at least 1 night' },
+        { status: 400 }
+      );
+    }
+
+    if (nights > 90) {
+      return NextResponse.json(
+        { error: 'Booking cannot exceed 90 nights' },
+        { status: 400 }
+      );
+    }
+
+    // Validate total price
+    if (typeof totalPrice !== 'number' || totalPrice <= 0) {
+      return NextResponse.json(
+        { error: 'Invalid total price' },
+        { status: 400 }
+      );
+    }
+
+    // Validate number of rooms
+    const numRooms = numberOfRooms || 1;
+    if (numRooms < 1 || numRooms > 10) {
+      return NextResponse.json(
+        { error: 'Number of rooms must be between 1 and 10' },
+        { status: 400 }
+      );
+    }
+
+    // Validate number of guests
+    const numAdults = adults || 1;
+    const numChildren = children || 0;
+    if (numAdults < 1 || numAdults > 20) {
+      return NextResponse.json(
+        { error: 'Number of adults must be between 1 and 20' },
+        { status: 400 }
+      );
+    }
+
+    if (numChildren < 0 || numChildren > 20) {
+      return NextResponse.json(
+        { error: 'Number of children cannot be negative or exceed 20' },
+        { status: 400 }
+      );
+    }
+
     // Double-check availability before creating booking
     const availabilityCheck = await fetch(
       `${request.nextUrl.origin}/api/availability/check`,
@@ -87,13 +171,7 @@ export async function POST(request: NextRequest) {
       receiptIssued: false,
     });
 
-    // Create availability blocks for booked dates
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-    const nights = Math.ceil(
-      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-
+    // Create availability blocks for booked dates (reuse validated dates and nights)
     // Block each night
     const availabilityPromises = [];
     for (let i = 0; i < nights; i++) {
