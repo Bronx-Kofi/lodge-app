@@ -116,6 +116,15 @@ export default defineType({
       group: 'pricing',
     }),
 
+    defineField({
+      name: "fixedPrice",
+      title: "Fixed Receipt Price (GH₵/night)",
+      type: "number",
+      description: "Exact price used for receipts and bookings. Example: 280",
+      validation: (Rule) => Rule.positive(),
+      group: 'pricing',
+    }),
+
     // GROUP 4: CAPACITY
     defineField({
       name: "capacity",

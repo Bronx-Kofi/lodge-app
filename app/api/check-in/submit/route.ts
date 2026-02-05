@@ -133,18 +133,20 @@ export async function POST(request: NextRequest) {
     let numberOfRooms = 1;
     let roomCapacity = 2; // Default capacity
     
-    let selectedRoomPriceMin: number | null = null;
+    let selectedRoomFixedPrice: number | null = null;
     if (selectedRoomId) {
       try {
         const roomData = await client.fetch(
-          `*[_type == "roomSimplified" && _id == $roomId][0]{ capacity, priceMin }`,
+          `*[_type == "roomSimplified" && _id == $roomId][0]{ capacity, priceMin, fixedPrice }`,
           { roomId: selectedRoomId }
         );
         if (roomData?.capacity) {
           roomCapacity = roomData.capacity;
         }
-        if (typeof roomData?.priceMin === 'number') {
-          selectedRoomPriceMin = roomData.priceMin;
+        // Prefer fixedPrice, fallback to priceMin
+        const roomPrice = roomData?.fixedPrice || roomData?.priceMin;
+        if (typeof roomPrice === 'number') {
+          selectedRoomFixedPrice = roomPrice;
         }
       } catch (err) {
         console.error('Error fetching room details:', err);
@@ -157,8 +159,8 @@ export async function POST(request: NextRequest) {
       console.log(`[Check-In API] ${numberOfGuests} guests need ${numberOfRooms} rooms (capacity: ${roomCapacity})`);
     }
     
-    // Resolve nightly rate: form value wins, else use selected room's priceMin
-    const resolvedNightlyRate = typeof nightlyRate === 'number' ? nightlyRate : (selectedRoomPriceMin ?? undefined);
+    // Resolve nightly rate: form value wins, else use selected room's fixedPrice/priceMin
+    const resolvedNightlyRate = typeof nightlyRate === 'number' ? nightlyRate : (selectedRoomFixedPrice ?? undefined);
 
     // Calculate total price if we have the nightly rate
     let calculatedTotal;

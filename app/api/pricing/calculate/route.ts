@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
         title,
         capacity,
         priceMin,
-        priceMax
+        priceMax,
+        fixedPrice
       }`,
       { roomId }
     );
@@ -46,8 +47,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if room has a price set
-    if (!room.priceMin) {
+    // Check if room has a price set (prefer fixedPrice, fallback to priceMin)
+    const roomPrice = room.fixedPrice || room.priceMin;
+    if (!roomPrice) {
       return NextResponse.json(
         { error: 'Room price not set. Please contact us for pricing.' },
         { status: 400 }
@@ -65,8 +67,8 @@ export async function POST(request: NextRequest) {
 
     const rooms = numberOfRooms || 1; // Default to 1 room if not specified
 
-    // Use fixed price from room (priceMin)
-    const baseRatePerNight = room.priceMin;
+    // Use fixed price from room (fixedPrice or priceMin)
+    const baseRatePerNight = roomPrice;
     let basePrice = baseRatePerNight * nights;
 
     // Calculate fees (per room)
