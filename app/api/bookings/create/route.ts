@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
       numberOfRooms,
       specialRequests,
       totalPrice,
+      roomPricePerNight,
       nationality,
       passportNumber,
     } = bookingData;
@@ -159,6 +160,7 @@ export async function POST(request: NextRequest) {
       numberOfRooms: numberOfRooms || 1,
       adults: adults || 1,
       children: children || 0,
+      roomPricePerNight: roomPricePerNight || null, // Store nightly rate for receipt generation
       totalPrice,
       status: 'pending',
       paymentStatus: 'pending',

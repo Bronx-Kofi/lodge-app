@@ -74,6 +74,13 @@ export default defineType({
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
+      name: 'roomPricePerNight',
+      title: 'Room Price Per Night (GH₵)',
+      type: 'number',
+      description: 'The nightly rate for this booking (stored for receipt generation)',
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
       name: 'totalPrice',
       title: 'Total Price (GH₵)',
       type: 'number',
@@ -101,11 +108,49 @@ export default defineType({
       options: {
         list: [
           { title: 'Pending', value: 'pending' },
-          { title: 'Paid', value: 'paid' },
+          { title: 'Partial Payment', value: 'partial' },
+          { title: 'Paid in Full', value: 'paid' },
           { title: 'Refunded', value: 'refunded' },
         ],
       },
       initialValue: 'pending',
+    }),
+    defineField({
+      name: 'amountPaid',
+      title: 'Amount Paid (GH₵)',
+      type: 'number',
+      description: 'Amount already paid (for partial payments or deposits)',
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'paymentMethod',
+      title: 'Payment Method',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Telecel Cash (Mobile Money)', value: 'telecel' },
+          { title: 'MTN Mobile Money', value: 'mtn' },
+          { title: 'Vodafone Cash', value: 'vodafone' },
+          { title: 'Bank Transfer', value: 'bank_transfer' },
+          { title: 'Cash', value: 'cash' },
+          { title: 'Credit/Debit Card', value: 'card' },
+          { title: 'Other', value: 'other' },
+        ],
+      },
+      description: 'How the guest paid or will pay',
+    }),
+    defineField({
+      name: 'paymentReference',
+      title: 'Payment Reference/Transaction ID',
+      type: 'string',
+      description: 'Mobile money transaction ID, bank reference, etc.',
+    }),
+    defineField({
+      name: 'paymentNotes',
+      title: 'Payment Notes',
+      type: 'text',
+      rows: 3,
+      description: 'Additional payment details or instructions',
     }),
     defineField({
       name: 'paymentIntentId',

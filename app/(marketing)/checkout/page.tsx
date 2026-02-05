@@ -103,6 +103,7 @@ function CheckoutContent() {
           adults: parseInt(adults || '1'),
           children: parseInt(children || '0'),
           specialRequests: formData.specialRequests,
+          roomPricePerNight: pricing?.roomPricePerNight || pricing?.baseRate || 0, // Store nightly rate
           totalPrice: pricing?.total || 0,
           nationality: formData.nationality || '',
           passportNumber: formData.passportNumber || '',

@@ -95,6 +95,14 @@ function VisaReceiptContent() {
   const hasValidDates = checkOutDate > checkInDate && nights > 0;
   const issueDate = new Date();
 
+  // Use stored roomPricePerNight first, then try room.finalPrice, fallback to calculating from total
+  const pricePerNight =
+    booking.roomPricePerNight ||
+    booking.room?.finalPrice ||
+    (booking.totalPrice && nights > 0 && booking.numberOfRooms > 0
+      ? Math.round(booking.totalPrice / nights / booking.numberOfRooms)
+      : 0);
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
@@ -362,8 +370,7 @@ function VisaReceiptContent() {
                     <div className="text-sm text-neutral-600">
                       {(() => {
                         if (!hasValidDates) return 'Invalid booking dates';
-                        const pricePerNight = booking.totalPrice && nights > 0 ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1)) : null;
-                        if (!pricePerNight) return 'Invalid pricing';
+                        if (!pricePerNight || pricePerNight <= 0) return 'Invalid pricing';
                         if (booking.numberOfRooms > 1) {
                           return `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`;
                         } else {
@@ -379,6 +386,72 @@ function VisaReceiptContent() {
                     }
                   </div>
                 </div>
+
+                {/* Partial Payment Section */}
+                {booking.amountPaid && booking.amountPaid > 0 && (
+                  <>
+                    <div className="flex justify-between items-center pt-3 border-t border-neutral-200">
+                      <div>
+                        <div className="font-medium text-green-700">Amount Paid</div>
+                        {booking.paymentMethod && (
+                          <div className="text-sm text-neutral-600">
+                            via {booking.paymentMethod === 'telecel' ? 'Telecel Cash' :
+                                 booking.paymentMethod === 'mtn' ? 'MTN Mobile Money' :
+                                 booking.paymentMethod === 'vodafone' ? 'Vodafone Cash' :
+                                 booking.paymentMethod === 'bank_transfer' ? 'Bank Transfer' :
+                                 booking.paymentMethod === 'cash' ? 'Cash' :
+                                 booking.paymentMethod === 'card' ? 'Card' :
+                                 booking.paymentMethod}
+                          </div>
+                        )}
+                        {booking.paymentReference && (
+                          <div className="text-xs text-neutral-500">
+                            Ref: {booking.paymentReference}
+                          </div>
+                        )}
+                      </div>
+                      <div className="font-semibold text-green-700">
+                        -GH₵ {booking.amountPaid.toLocaleString()}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-3 border-t-2 border-neutral-300">
+                      <div>
+                        <div className="font-bold text-dark text-lg">
+                          {booking.amountPaid >= booking.totalPrice ? 'Total Paid' : 'Balance Due'}
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {booking.paymentStatus === 'paid' ? 'Paid in Full ✓' : 
+                           booking.paymentStatus === 'partial' ? 'Partial Payment Received' :
+                           'Payment Pending'}
+                        </div>
+                      </div>
+                      <div className={`font-bold text-lg ${
+                        booking.amountPaid >= booking.totalPrice ? 'text-green-700' : 'text-dark'
+                      }`}>
+                        GH₵ {Math.max(0, booking.totalPrice - booking.amountPaid).toLocaleString()}
+                      </div>
+                    </div>
+
+                    {booking.paymentNotes && (
+                      <div className="pt-3 border-t border-neutral-200">
+                        <div className="text-sm text-neutral-600">
+                          <span className="font-medium">Payment Notes:</span> {booking.paymentNotes}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Show Total if no partial payment */}
+                {(!booking.amountPaid || booking.amountPaid === 0) && (
+                  <div className="flex justify-between items-center pt-3 border-t-2 border-neutral-300">
+                    <div className="font-bold text-dark text-lg">Total Amount</div>
+                    <div className="font-bold text-dark text-lg">
+                      GH₵ {booking.totalPrice.toLocaleString()}
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="border-t-2 border-neutral-200 pt-4">

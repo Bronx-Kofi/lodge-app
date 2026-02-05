@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
           tagline,
           price,
           receiptPrice,
+          bookingPrice,
           "finalPrice": coalesce(receiptPrice, price),
           "image": image.asset->url
         },
@@ -71,9 +72,14 @@ export async function POST(request: NextRequest) {
         checkOut,
         adults,
         children,
+        roomPricePerNight,
         totalPrice,
         status,
         paymentStatus,
+        amountPaid,
+        paymentMethod,
+        paymentReference,
+        paymentNotes,
         specialRequests,
         createdAt,
         receiptNumber,
@@ -109,6 +115,7 @@ export async function POST(request: NextRequest) {
             title,
             price,
             receiptPrice,
+            bookingPrice,
             "finalPrice": coalesce(receiptPrice, price),
             "image": image.asset->url
           },
@@ -154,6 +161,7 @@ export async function POST(request: NextRequest) {
             tagline,
             price,
             receiptPrice,
+            bookingPrice,
             "finalPrice": coalesce(receiptPrice, price),
             "image": image.asset->url
           }`,
@@ -184,6 +192,7 @@ export async function POST(request: NextRequest) {
             title,
             price,
             receiptPrice,
+            bookingPrice,
             "finalPrice": coalesce(receiptPrice, price)
           }`
         );

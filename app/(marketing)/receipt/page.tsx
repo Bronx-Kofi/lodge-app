@@ -93,10 +93,13 @@ function ReceiptContent() {
       ? booking.totalPrice
       : null;
 
+  // Use stored roomPricePerNight first, then try room.finalPrice, fallback to calculating from total
   const pricePerNight =
-    computedTotal && nights > 0
-      ? Math.round(computedTotal / nights)
-      : 0;
+    booking.roomPricePerNight ||
+    booking.room?.finalPrice ||
+    (computedTotal && nights > 0 && booking.numberOfRooms > 0
+      ? Math.round(computedTotal / nights / booking.numberOfRooms)
+      : 0);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-GB', {
@@ -363,20 +366,75 @@ function ReceiptContent() {
                     {hasValidDates && computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-red-600">Invalid Booking</span>}
                   </div>
                 </div>
-                <div className="text-sm text-neutral-600 mt-2">
-                  Payment Status: <span className="font-semibold">{booking.paymentStatus === 'paid' ? 'Paid' : booking.paymentStatus === 'partial' ? 'Deposit Paid' : 'Reservation Confirmed'}</span>
-                </div>
 
-                {booking.paymentDeclaration === 'paid_telecel' && (
-                  <div className="mt-3 text-sm text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-lg p-3">
-                    <div className="font-semibold text-neutral-800 mb-1">Payment Information</div>
-                    <div>Method: Telecel Cash (Mobile Money)</div>
-                    <div>Paid To: 0201449457</div>
-                    {booking.telecelPaymentNumber && <div>Sender Number: {booking.telecelPaymentNumber}</div>}
-                    {booking.telecelTransactionId && <div>Transaction ID: {booking.telecelTransactionId}</div>}
-                    {typeof booking.amountPaid === 'number' && booking.amountPaid > 0 && (
-                      <div>Amount Paid: GH₵ {booking.amountPaid.toLocaleString()}</div>
+                {/* Partial Payment Display */}
+                {booking.amountPaid && booking.amountPaid > 0 ? (
+                  <>
+                    <div className="mt-4 pt-4 border-t border-neutral-200">
+                      <div className="flex justify-between items-center mb-3">
+                        <div>
+                          <div className="font-semibold text-green-700">Amount Paid</div>
+                          {booking.paymentMethod && (
+                            <div className="text-sm text-neutral-600">
+                              via {booking.paymentMethod === 'telecel' ? 'Telecel Cash' :
+                                   booking.paymentMethod === 'mtn' ? 'MTN Mobile Money' :
+                                   booking.paymentMethod === 'vodafone' ? 'Vodafone Cash' :
+                                   booking.paymentMethod === 'bank_transfer' ? 'Bank Transfer' :
+                                   booking.paymentMethod === 'cash' ? 'Cash' :
+                                   booking.paymentMethod === 'card' ? 'Card' :
+                                   booking.paymentMethod}
+                            </div>
+                          )}
+                          {booking.paymentReference && (
+                            <div className="text-xs text-neutral-500">
+                              Ref: {booking.paymentReference}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xl font-bold text-green-700">
+                          GH₵ {booking.amountPaid.toLocaleString()}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border-2 border-orange">
+                        <div>
+                          <div className="text-lg font-bold text-dark">
+                            {booking.amountPaid >= computedTotal ? 'Status: Paid in Full ✓' : 'Balance Due'}
+                          </div>
+                          <div className="text-sm text-neutral-600">
+                            {booking.paymentStatus === 'paid' ? 'Payment Complete' : 
+                             booking.paymentStatus === 'partial' ? 'Partial Payment Received' :
+                             'Payment Required'}
+                          </div>
+                        </div>
+                        <div className={`text-2xl font-bold ${
+                          booking.amountPaid >= computedTotal ? 'text-green-600' : 'text-orange'
+                        }`}>
+                          GH₵ {Math.max(0, computedTotal - booking.amountPaid).toLocaleString()}
+                        </div>
+                      </div>
+
+                      {booking.paymentNotes && (
+                        <div className="mt-3 text-sm text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-lg p-3">
+                          <span className="font-semibold">Payment Notes:</span> {booking.paymentNotes}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Legacy telecel payment info - kept for backward compatibility */}
+                    {booking.paymentDeclaration === 'paid_telecel' && !booking.paymentMethod && (
+                      <div className="mt-3 text-sm text-neutral-700 bg-neutral-50 border border-neutral-200 rounded-lg p-3">
+                        <div className="font-semibold text-neutral-800 mb-1">Payment Information</div>
+                        <div>Method: Telecel Cash (Mobile Money)</div>
+                        <div>Paid To: 0201449457</div>
+                        {booking.telecelPaymentNumber && <div>Sender Number: {booking.telecelPaymentNumber}</div>}
+                        {booking.telecelTransactionId && <div>Transaction ID: {booking.telecelTransactionId}</div>}
+                      </div>
                     )}
+                  </>
+                ) : (
+                  <div className="text-sm text-neutral-600 mt-2">
+                    Payment Status: <span className="font-semibold">{booking.paymentStatus === 'paid' ? 'Paid' : booking.paymentStatus === 'partial' ? 'Deposit Paid' : 'Reservation Confirmed'}</span>
                   </div>
                 )}
               </div>

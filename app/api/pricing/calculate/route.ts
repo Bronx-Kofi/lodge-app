@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
         title,
         capacity,
         price,
-        receiptPrice
+        receiptPrice,
+        bookingPrice
       }`,
       { roomId }
     );
@@ -46,8 +47,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use fixed price from room (receiptPrice overrides price)
-    const roomPrice = room.receiptPrice || room.price;
+    // Priority: bookingPrice > price (receiptPrice is only for receipts, not booking calculations)
+    const roomPrice = room.bookingPrice || room.price;
     if (!roomPrice) {
       return NextResponse.json(
         { error: 'Room price not set. Please contact us for pricing.' },
@@ -90,6 +91,7 @@ export async function POST(request: NextRequest) {
       nights,
       numberOfRooms: rooms,
       baseRate: baseRatePerNight,
+      roomPricePerNight: baseRatePerNight, // Store for booking record
       basePrice: Math.round(basePrice),
       basePriceTotal: Math.round(basePrice * rooms),
       cleaningFee: totalCleaningFee,

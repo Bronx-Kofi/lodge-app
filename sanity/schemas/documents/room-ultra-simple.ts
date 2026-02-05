@@ -101,19 +101,37 @@ export default defineType({
     // GROUP 3: PRICING - FIXED PRICE ONLY
     defineField({
       name: "price",
-      title: "Room Price (GH₵/night)",
+      title: "Display Price (GH₵/night)",
       type: "number",
-      description: "Price per night for this room. Example: 280",
+      description: "Price shown on website and booking widget. Example: 280",
       validation: (Rule) => Rule.required().positive(),
       group: 'pricing',
     }),
 
     defineField({
       name: "receiptPrice",
-      title: "Receipt Price Override (GH₵/night) [Optional]",
+      title: "Receipt/Invoice Price (GH₵/night) [Optional]",
       type: "number",
-      description: "Optional: Different price for receipts only. Leave blank to use room price.",
+      description: "Optional: Different price for receipts and invoices. Leave blank to use Display Price.",
       validation: (Rule) => Rule.positive(),
+      group: 'pricing',
+    }),
+
+    defineField({
+      name: "bookingPrice",
+      title: "Booking Widget Price (GH₵/night) [Optional]",
+      type: "number",
+      description: "Optional: Different price for actual bookings. Leave blank to use Display Price.",
+      validation: (Rule) => Rule.positive(),
+      group: 'pricing',
+    }),
+
+    defineField({
+      name: "pricingNotes",
+      title: "Pricing Notes (Internal)",
+      type: "text",
+      description: "Internal notes about pricing strategy (not shown to guests)",
+      rows: 2,
       group: 'pricing',
     }),
 
