@@ -179,12 +179,14 @@ export async function POST(request: NextRequest) {
       );
 
       // If we still can't determine the nightly rate (legacy submissions), fall back to the lowest-priced room.
-      let nightlyRate =
-        typeof roomData?.price === 'number'
-          ? roomData.price
-          : storedNightlyRate;
+      let nightlyRate = storedNightlyRate;
+      
+      // Use roomData.price if available (from our computed alias)
+      if (roomData && typeof roomData.price === 'number' && roomData.price > 0) {
+        nightlyRate = roomData.price;
+      }
 
-      let fallbackRoom: { title: string; price: number } | null = null;
+      let fallbackRoom: { title: string; price: number | null } | null = null;
       if (nightlyRate == null) {
         fallbackRoom = await readClient.fetch(
           `*[_type == "roomSimplified" && (defined(fixedPrice) || defined(fixedDisplayPrice) || defined(priceMin))] | order(coalesce(fixedPrice, select(pricingType == "fixed" => fixedDisplayPrice, priceMin)) asc)[0]{
@@ -197,7 +199,7 @@ export async function POST(request: NextRequest) {
               select(pricingType == "fixed" => fixedDisplayPrice, priceMin))
           }`
         );
-        nightlyRate = typeof fallbackRoom?.price === 'number' ? fallbackRoom.price : null;
+        nightlyRate = typeof fallbackRoom?.price === 'number' && fallbackRoom.price > 0 ? fallbackRoom.price : null;
       }
 
       // Use stored totalPrice if available (includes all fees), otherwise calculate basic total
