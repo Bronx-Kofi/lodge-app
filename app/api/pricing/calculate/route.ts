@@ -28,16 +28,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get room info with pricing details
+    // Get room info with fixed pricing
     const room = await client.fetch(
       `*[_type == "roomSimplified" && _id == $roomId][0]{
         title,
         capacity,
-        pricingType,
-        priceMin,
-        priceMax,
-        fixedDisplayPrice,
-        fixedPrice
+        price,
+        receiptPrice
       }`,
       { roomId }
     );
@@ -49,22 +46,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Determine the correct price based on pricing type
-    let roomPrice;
-    if (room.fixedPrice) {
-      // Receipt override price wins
-      roomPrice = room.fixedPrice;
-    } else if (room.pricingType === 'fixed' && room.fixedDisplayPrice) {
-      // Fixed pricing type
-      roomPrice = room.fixedDisplayPrice;
-    } else if (room.pricingType === 'range' && room.priceMin) {
-      // Range pricing type
-      roomPrice = room.priceMin;
-    } else {
-      // Fallback to any available price
-      roomPrice = room.fixedDisplayPrice || room.priceMin;
-    }
-
+    // Use fixed price from room (receiptPrice overrides price)
+    const roomPrice = room.receiptPrice || room.price;
     if (!roomPrice) {
       return NextResponse.json(
         { error: 'Room price not set. Please contact us for pricing.' },

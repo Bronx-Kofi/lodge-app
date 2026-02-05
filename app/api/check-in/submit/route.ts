@@ -139,27 +139,16 @@ export async function POST(request: NextRequest) {
         const roomData = await client.fetch(
           `*[_type == "roomSimplified" && _id == $roomId][0]{ 
             capacity, 
-            pricingType,
-            priceMin, 
-            fixedDisplayPrice,
-            fixedPrice 
+            price,
+            receiptPrice
           }`,
           { roomId: selectedRoomId }
         );
         if (roomData?.capacity) {
           roomCapacity = roomData.capacity;
         }
-        // Determine room price using same logic as pricing API
-        let roomPrice;
-        if (roomData?.fixedPrice) {
-          roomPrice = roomData.fixedPrice;
-        } else if (roomData?.pricingType === 'fixed' && roomData?.fixedDisplayPrice) {
-          roomPrice = roomData.fixedDisplayPrice;
-        } else if (roomData?.pricingType === 'range' && roomData?.priceMin) {
-          roomPrice = roomData.priceMin;
-        } else {
-          roomPrice = roomData?.fixedDisplayPrice || roomData?.priceMin;
-        }
+        // Use fixed price (receiptPrice overrides price)
+        const roomPrice = roomData?.receiptPrice || roomData?.price;
         
         if (typeof roomPrice === 'number') {
           selectedRoomPrice = roomPrice;
