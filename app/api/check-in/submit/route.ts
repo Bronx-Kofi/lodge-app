@@ -133,17 +133,21 @@ export async function POST(request: NextRequest) {
     let numberOfRooms = 1;
     let roomCapacity = 2; // Default capacity
     
+    let selectedRoomPriceMin: number | null = null;
     if (selectedRoomId) {
       try {
         const roomData = await client.fetch(
-          `*[_type == "room" && _id == $roomId][0]{ capacity }`,
+          `*[_type == "roomSimplified" && _id == $roomId][0]{ capacity, priceMin }`,
           { roomId: selectedRoomId }
         );
         if (roomData?.capacity) {
           roomCapacity = roomData.capacity;
         }
+        if (typeof roomData?.priceMin === 'number') {
+          selectedRoomPriceMin = roomData.priceMin;
+        }
       } catch (err) {
-        console.error('Error fetching room capacity:', err);
+        console.error('Error fetching room details:', err);
       }
     }
     
@@ -153,15 +157,18 @@ export async function POST(request: NextRequest) {
       console.log(`[Check-In API] ${numberOfGuests} guests need ${numberOfRooms} rooms (capacity: ${roomCapacity})`);
     }
     
+    // Resolve nightly rate: form value wins, else use selected room's priceMin
+    const resolvedNightlyRate = typeof nightlyRate === 'number' ? nightlyRate : (selectedRoomPriceMin ?? undefined);
+
     // Calculate total price if we have the nightly rate
     let calculatedTotal;
-    if (nightlyRate && checkInDate && checkOutDate) {
+    if (resolvedNightlyRate && checkInDate && checkOutDate) {
       const nights = Math.ceil(
         (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24)
       );
       // Simple calculation: nights × rate × rooms (no additional fees)
-      calculatedTotal = nights * nightlyRate * numberOfRooms;
-      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${nightlyRate})`);
+      calculatedTotal = nights * resolvedNightlyRate * numberOfRooms;
+      console.log(`[Check-In API] Calculated total: GH₵${calculatedTotal} (${nights} nights × ${numberOfRooms} rooms × GH₵${resolvedNightlyRate})`);
     }
 
     const checkInSubmission = await client.create({
@@ -184,7 +191,7 @@ export async function POST(request: NextRequest) {
       roomPreference: roomPreference || '',
       selectedRoom: selectedRoomId ? { _type: 'reference', _ref: selectedRoomId } : undefined,
       selectedRoomTitle: selectedRoomTitle || '',
-      nightlyRate: typeof nightlyRate === 'number' ? nightlyRate : undefined,
+      nightlyRate: typeof resolvedNightlyRate === 'number' ? resolvedNightlyRate : undefined,
       totalPrice: calculatedTotal,
       paymentDeclaration: paymentDeclaration || 'not_paid',
       telecelPaymentNumber: telecelPaymentNumber || '',

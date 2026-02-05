@@ -28,11 +28,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get room info (no price, we use dynamic pricing)
+    // Get room info with fixed price
     const room = await client.fetch(
       `*[_type == "roomSimplified" && _id == $roomId][0]{
         title,
-        capacity
+        capacity,
+        priceMin,
+        priceMax
       }`,
       { roomId }
     );
@@ -41,6 +43,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Room not found' },
         { status: 404 }
+      );
+    }
+
+    // Check if room has a price set
+    if (!room.priceMin) {
+      return NextResponse.json(
+        { error: 'Room price not set. Please contact us for pricing.' },
+        { status: 400 }
       );
     }
 
@@ -55,68 +65,9 @@ export async function POST(request: NextRequest) {
 
     const rooms = numberOfRooms || 1; // Default to 1 room if not specified
 
-    // Get applicable pricing rules (must have base price)
-    const pricingRules = await client.fetch(
-      `*[_type == "pricingRule" && 
-         active == true &&
-         basePrice != null &&
-         startDate <= $checkOut &&
-         endDate >= $checkIn &&
-         (count(rooms) == 0 || $roomId in rooms[]._ref)
-      ] | order(priority desc)`,
-      { roomId, checkIn, checkOut }
-    );
-
-    if (!pricingRules || pricingRules.length === 0) {
-      return NextResponse.json(
-        { error: 'No pricing rules available for selected dates. Please contact us for pricing.' },
-        { status: 400 }
-      );
-    }
-
-    // Use the highest priority rule's base price
-    const primaryRule = pricingRules[0];
-    let basePrice = primaryRule.basePrice * nights;
-    let baseRatePerNight = primaryRule.basePrice;
-
-    // Apply pricing rule modifiers
-    let totalModifier = 0;
-    const appliedRules: any[] = [{
-      name: primaryRule.name,
-      type: 'base',
-      value: primaryRule.basePrice,
-    }];
-
-    for (const rule of pricingRules) {
-      // Skip if it's the primary rule (already used for base price)
-      if (rule === primaryRule) continue;
-
-      // Check minimum stay requirement
-      if (rule.minimumStay && nights < rule.minimumStay) {
-        continue;
-      }
-
-      if (rule.modifierType === 'percentage') {
-        totalModifier += rule.modifierValue;
-        appliedRules.push({
-          name: rule.name,
-          type: rule.modifierType,
-          value: rule.modifierValue,
-        });
-      } else if (rule.modifierType === 'fixed') {
-        basePrice += rule.modifierValue;
-        appliedRules.push({
-          name: rule.name,
-          type: rule.modifierType,
-          value: rule.modifierValue,
-        });
-      }
-    }
-
-    // Apply percentage modifiers
-    if (totalModifier !== 0) {
-      basePrice = basePrice * (1 + totalModifier / 100);
-    }
+    // Use fixed price from room (priceMin)
+    const baseRatePerNight = room.priceMin;
+    let basePrice = baseRatePerNight * nights;
 
     // Calculate fees (per room)
     const cleaningFeePerRoom = 50; // Fixed cleaning fee per room
@@ -145,7 +96,6 @@ export async function POST(request: NextRequest) {
       serviceFee,
       taxes,
       total,
-      appliedRules,
       breakdown: {
         nightlyRate: `GH₵${baseRatePerNight} × ${nights} ${nights === 1 ? 'night' : 'nights'}`,
         roomsMultiplier: rooms > 1 ? `× ${rooms} ${rooms === 1 ? 'room' : 'rooms'}` : null,

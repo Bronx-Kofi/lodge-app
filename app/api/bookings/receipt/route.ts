@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
           _id,
           title,
           tagline,
-          price,
+          "price": priceMin,
           "image": image.asset->url
         },
         guestName,
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
           selectedRoom->{
             _id,
             title,
-            price,
+            "price": priceMin,
             "image": image.asset->url
           },
           selectedRoomTitle,
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
             _id,
             title,
             tagline,
-            price,
+            "price": priceMin,
             "image": image.asset->url
           }`,
           { roomTitle: `*${checkInForm.roomPreference}*` }
@@ -172,9 +172,9 @@ export async function POST(request: NextRequest) {
       let fallbackRoom: { title: string; price: number } | null = null;
       if (nightlyRate == null) {
         fallbackRoom = await readClient.fetch(
-          `*[_type == "roomSimplified" && defined(price)] | order(price asc)[0]{
+          `*[_type == "roomSimplified" && defined(priceMin)] | order(priceMin asc)[0]{
             title,
-            price
+            "price": priceMin
           }`
         );
         nightlyRate = typeof fallbackRoom?.price === 'number' ? fallbackRoom.price : null;
