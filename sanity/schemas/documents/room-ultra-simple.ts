@@ -14,7 +14,7 @@ export default defineType({
   groups: [
     { name: 'basic', title: '1. Basic Info' },
     { name: 'photos', title: '2. Photos' },
-    { name: 'pricing', title: '3. Price Range' },
+    { name: 'pricing', title: '3. Pricing' },
     { name: 'capacity', title: '4. Who Can Stay' },
     { name: 'amenities', title: '5. What\'s Included' },
     { name: 'details', title: '6. Additional Details' },
