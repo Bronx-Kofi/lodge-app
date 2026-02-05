@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       ][0]{
         _id,
         bookingReference,
-        "room": room->{
+        "room": room[_type == "roomSimplified"]->{
           _id,
           title,
           tagline,
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
           fixedDisplayPrice,
           fixedPrice,
           "price": coalesce(fixedPrice, 
-            select(pricingType == "fixed" => fixedDisplayPrice, priceMin)),
+            select(defined(pricingType) && pricingType == "fixed" => fixedDisplayPrice, priceMin)),
           "image": image.asset->url
         },
         guestName,
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
           checkOutDate,
           numberOfGuests,
           roomPreference,
-          selectedRoom->{
+          selectedRoom[_type == "roomSimplified"]->{
             _id,
             title,
             pricingType,
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
             fixedDisplayPrice,
             fixedPrice,
             "price": coalesce(fixedPrice, 
-              select(pricingType == "fixed" => fixedDisplayPrice, priceMin)),
+              select(defined(pricingType) && pricingType == "fixed" => fixedDisplayPrice, priceMin)),
             "image": image.asset->url
           },
           selectedRoomTitle,
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
 
       if (!roomData && checkInForm.roomPreference) {
         roomData = await readClient.fetch(
-          `*[_type == "roomUltraSimple" && title match $roomTitle][0]{
+          `*[_type == "roomSimplified" && title match $roomTitle][0]{
             _id,
             title,
             tagline,
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
             fixedDisplayPrice,
             fixedPrice,
             "price": coalesce(fixedPrice, 
-              select(pricingType == "fixed" => fixedDisplayPrice, priceMin)),
+              select(defined(pricingType) && pricingType == "fixed" => fixedDisplayPrice, priceMin)),
             "image": image.asset->url
           }`,
           { roomTitle: `*${checkInForm.roomPreference}*` }
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
       let fallbackRoom: { title: string; price: number } | null = null;
       if (nightlyRate == null) {
         fallbackRoom = await readClient.fetch(
-          `*[_type == "roomUltraSimple" && (defined(fixedPrice) || defined(fixedDisplayPrice) || defined(priceMin))] | order(coalesce(fixedPrice, select(pricingType == "fixed" => fixedDisplayPrice, priceMin)) asc)[0]{
+          `*[_type == "roomSimplified" && (defined(fixedPrice) || defined(fixedDisplayPrice) || defined(priceMin))] | order(coalesce(fixedPrice, select(pricingType == "fixed" => fixedDisplayPrice, priceMin)) asc)[0]{
             title,
             pricingType,
             priceMin,
