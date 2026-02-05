@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
     if (selectedRoomId) {
       try {
         const roomData = await client.fetch(
-          `*[_type == "roomSimplified" && _id == $roomId][0]{ 
+          `*[_type == "roomUltraSimple" && _id == $roomId][0]{ 
             capacity, 
             pricingType,
             priceMin, 

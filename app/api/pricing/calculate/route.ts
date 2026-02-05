@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // Get room info with pricing details
     const room = await client.fetch(
-      `*[_type == "roomSimplified" && _id == $roomId][0]{
+      `*[_type == "roomUltraSimple" && _id == $roomId][0]{
         title,
         capacity,
         pricingType,

@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
 
       if (!roomData && checkInForm.roomPreference) {
         roomData = await readClient.fetch(
-          `*[_type == "roomSimplified" && title match $roomTitle][0]{
+          `*[_type == "roomUltraSimple" && title match $roomTitle][0]{
             _id,
             title,
             tagline,
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
       let fallbackRoom: { title: string; price: number } | null = null;
       if (nightlyRate == null) {
         fallbackRoom = await readClient.fetch(
-          `*[_type == "roomSimplified" && (defined(fixedPrice) || defined(fixedDisplayPrice) || defined(priceMin))] | order(coalesce(fixedPrice, select(pricingType == "fixed" => fixedDisplayPrice, priceMin)) asc)[0]{
+          `*[_type == "roomUltraSimple" && (defined(fixedPrice) || defined(fixedDisplayPrice) || defined(priceMin))] | order(coalesce(fixedPrice, select(pricingType == "fixed" => fixedDisplayPrice, priceMin)) asc)[0]{
             title,
             pricingType,
             priceMin,
