@@ -98,13 +98,31 @@ export default defineType({
       group: 'photos',
     }),
 
-    // GROUP 3: PRICING - Price Range
+    // GROUP 3: PRICING
+    defineField({
+      name: "pricingType",
+      title: "Pricing Display Type",
+      type: "string",
+      description: "Choose how to display prices on your website",
+      options: {
+        list: [
+          { title: "Range Pricing (From $X - $Y)", value: "range" },
+          { title: "Fixed Price ($X per night)", value: "fixed" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "range",
+      validation: (Rule) => Rule.required(),
+      group: 'pricing',
+    }),
+
     defineField({
       name: "priceMin",
       title: "Minimum Price (GH₵/night)",
       type: "number",
       description: "Starting price for this room. Example: 200",
-      validation: (Rule) => Rule.required().positive(),
+      validation: (Rule) => Rule.positive(),
+      hidden: ({ document }) => document?.pricingType === 'fixed',
       group: 'pricing',
     }),
     defineField({
@@ -112,15 +130,36 @@ export default defineType({
       title: "Maximum Price (GH₵/night)",
       type: "number",
       description: "Maximum price for peak seasons. Example: 350",
-      validation: (Rule) => Rule.required().positive(),
+      validation: (Rule) => Rule.positive(),
+      hidden: ({ document }) => document?.pricingType === 'fixed',
+      group: 'pricing',
+    }),
+
+    defineField({
+      name: "fixedDisplayPrice",
+      title: "Fixed Display Price (GH₵/night)",
+      type: "number",
+      description: "Single price shown on website and used for bookings. Example: 280",
+      validation: (Rule) => 
+        Rule.custom((value, context) => {
+          const pricingType = (context.document as any)?.pricingType;
+          if (pricingType === 'fixed' && !value) {
+            return 'Fixed price is required when using fixed pricing';
+          }
+          if (value && value <= 0) {
+            return 'Price must be positive';
+          }
+          return true;
+        }),
+      hidden: ({ document }) => document?.pricingType === 'range',
       group: 'pricing',
     }),
 
     defineField({
       name: "fixedPrice",
-      title: "Fixed Receipt Price (GH₵/night)",
+      title: "Receipt Override Price (GH₵/night) [Optional]",
       type: "number",
-      description: "Exact price used for receipts and bookings. Example: 280",
+      description: "Optional: Override price for receipts only. Leave blank to use display price.",
       validation: (Rule) => Rule.positive(),
       group: 'pricing',
     }),
@@ -231,16 +270,28 @@ export default defineType({
       title: "title",
       subtitle: "tagline",
       media: "image",
+      pricingType: "pricingType",
       priceMin: "priceMin",
       priceMax: "priceMax",
+      fixedDisplayPrice: "fixedDisplayPrice",
     },
-    prepare({ title, subtitle, media, priceMin, priceMax }) {
-      const priceRange = priceMin && priceMax 
-        ? `GH₵${priceMin} - GH₵${priceMax}/night`
-        : subtitle;
+    prepare({ title, subtitle, media, pricingType, priceMin, priceMax, fixedDisplayPrice }) {
+      let priceDisplay;
+      if (pricingType === 'fixed' && fixedDisplayPrice) {
+        priceDisplay = `GH₵${fixedDisplayPrice}/night`;
+      } else if (pricingType === 'range' && priceMin && priceMax) {
+        priceDisplay = `GH₵${priceMin} - GH₵${priceMax}/night`;
+      } else if (fixedDisplayPrice) {
+        priceDisplay = `GH₵${fixedDisplayPrice}/night`;
+      } else if (priceMin) {
+        priceDisplay = `From GH₵${priceMin}/night`;
+      } else {
+        priceDisplay = "No price set";
+      }
+      
       return {
         title: title || "Untitled Room",
-        subtitle: priceRange || "No price range set",
+        subtitle: priceDisplay,
         media,
       };
     },

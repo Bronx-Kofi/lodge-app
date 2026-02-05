@@ -133,20 +133,36 @@ export async function POST(request: NextRequest) {
     let numberOfRooms = 1;
     let roomCapacity = 2; // Default capacity
     
-    let selectedRoomFixedPrice: number | null = null;
+    let selectedRoomPrice: number | null = null;
     if (selectedRoomId) {
       try {
         const roomData = await client.fetch(
-          `*[_type == "roomSimplified" && _id == $roomId][0]{ capacity, priceMin, fixedPrice }`,
+          `*[_type == "roomSimplified" && _id == $roomId][0]{ 
+            capacity, 
+            pricingType,
+            priceMin, 
+            fixedDisplayPrice,
+            fixedPrice 
+          }`,
           { roomId: selectedRoomId }
         );
         if (roomData?.capacity) {
           roomCapacity = roomData.capacity;
         }
-        // Prefer fixedPrice, fallback to priceMin
-        const roomPrice = roomData?.fixedPrice || roomData?.priceMin;
+        // Determine room price using same logic as pricing API
+        let roomPrice;
+        if (roomData?.fixedPrice) {
+          roomPrice = roomData.fixedPrice;
+        } else if (roomData?.pricingType === 'fixed' && roomData?.fixedDisplayPrice) {
+          roomPrice = roomData.fixedDisplayPrice;
+        } else if (roomData?.pricingType === 'range' && roomData?.priceMin) {
+          roomPrice = roomData.priceMin;
+        } else {
+          roomPrice = roomData?.fixedDisplayPrice || roomData?.priceMin;
+        }
+        
         if (typeof roomPrice === 'number') {
-          selectedRoomFixedPrice = roomPrice;
+          selectedRoomPrice = roomPrice;
         }
       } catch (err) {
         console.error('Error fetching room details:', err);
@@ -159,8 +175,8 @@ export async function POST(request: NextRequest) {
       console.log(`[Check-In API] ${numberOfGuests} guests need ${numberOfRooms} rooms (capacity: ${roomCapacity})`);
     }
     
-    // Resolve nightly rate: form value wins, else use selected room's fixedPrice/priceMin
-    const resolvedNightlyRate = typeof nightlyRate === 'number' ? nightlyRate : (selectedRoomFixedPrice ?? undefined);
+    // Resolve nightly rate: form value wins, else use selected room's determined price
+    const resolvedNightlyRate = typeof nightlyRate === 'number' ? nightlyRate : (selectedRoomPrice ?? undefined);
 
     // Calculate total price if we have the nightly rate
     let calculatedTotal;

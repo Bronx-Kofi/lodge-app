@@ -28,13 +28,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get room info with fixed price
+    // Get room info with pricing details
     const room = await client.fetch(
       `*[_type == "roomSimplified" && _id == $roomId][0]{
         title,
         capacity,
+        pricingType,
         priceMin,
         priceMax,
+        fixedDisplayPrice,
         fixedPrice
       }`,
       { roomId }
@@ -47,8 +49,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if room has a price set (prefer fixedPrice, fallback to priceMin)
-    const roomPrice = room.fixedPrice || room.priceMin;
+    // Determine the correct price based on pricing type
+    let roomPrice;
+    if (room.fixedPrice) {
+      // Receipt override price wins
+      roomPrice = room.fixedPrice;
+    } else if (room.pricingType === 'fixed' && room.fixedDisplayPrice) {
+      // Fixed pricing type
+      roomPrice = room.fixedDisplayPrice;
+    } else if (room.pricingType === 'range' && room.priceMin) {
+      // Range pricing type
+      roomPrice = room.priceMin;
+    } else {
+      // Fallback to any available price
+      roomPrice = room.fixedDisplayPrice || room.priceMin;
+    }
+
     if (!roomPrice) {
       return NextResponse.json(
         { error: 'Room price not set. Please contact us for pricing.' },
@@ -67,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     const rooms = numberOfRooms || 1; // Default to 1 room if not specified
 
-    // Use fixed price from room (fixedPrice or priceMin)
+    // Use determined price for calculations
     const baseRatePerNight = roomPrice;
     let basePrice = baseRatePerNight * nights;
 
