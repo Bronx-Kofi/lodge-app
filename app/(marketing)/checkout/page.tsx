@@ -32,6 +32,12 @@ function CheckoutContent() {
 
   const [pricing, setPricing] = useState<any>(null);
   const [room, setRoom] = useState<any>(null);
+  
+  // Payment options
+  const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
+  const [depositAmount, setDepositAmount] = useState<string>('');
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
+  const [paymentReference, setPaymentReference] = useState<string>('');
 
   useEffect(() => {
     if (!roomId || !checkIn || !checkOut) {
@@ -86,10 +92,29 @@ function CheckoutContent() {
       return;
     }
 
+    // Validate partial payment
+    if (paymentOption === 'deposit') {
+      const deposit = parseFloat(depositAmount);
+      if (!deposit || deposit <= 0) {
+        setError('Please enter a valid deposit amount');
+        return;
+      }
+      if (deposit > (pricing?.total || 0)) {
+        setError('Deposit amount cannot exceed total price');
+        return;
+      }
+      if (!paymentMethod) {
+        setError('Please select a payment method');
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
 
     try {
+      const deposit = paymentOption === 'deposit' ? parseFloat(depositAmount) : 0;
+      
       const res = await fetch('/api/bookings/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,10 +128,15 @@ function CheckoutContent() {
           adults: parseInt(adults || '1'),
           children: parseInt(children || '0'),
           specialRequests: formData.specialRequests,
-          roomPricePerNight: pricing?.roomPricePerNight || pricing?.baseRate || 0, // Store nightly rate
+          roomPricePerNight: pricing?.roomPricePerNight || pricing?.baseRate || 0,
           totalPrice: pricing?.total || 0,
           nationality: formData.nationality || '',
           passportNumber: formData.passportNumber || '',
+          // Partial payment data
+          paymentStatus: deposit > 0 ? (deposit >= (pricing?.total || 0) ? 'paid' : 'partial') : 'pending',
+          amountPaid: deposit || 0,
+          paymentMethod: paymentMethod || '',
+          paymentReference: paymentReference || '',
         }),
       });
 
@@ -370,6 +400,114 @@ function CheckoutContent() {
                           <p className="font-semibold mb-1">Your booking is secure</p>
                           <p>After completing payment, you&apos;ll receive an official receipt suitable for visa applications and expense reports.</p>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Partial Payment Option */}
+                    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-6">
+                      <h4 className="font-bold text-dark mb-4 flex items-center gap-2">
+                        <span className="text-2xl">💰</span>
+                        Payment Option
+                      </h4>
+                      
+                      <div className="space-y-4">
+                        {/* Payment Type Selection */}
+                        <div className="space-y-3">
+                          <label className="flex items-center gap-3 p-4 bg-white border-2 border-neutral-200 rounded-lg cursor-pointer hover:border-purple-300 transition-colors">
+                            <input
+                              type="radio"
+                              name="paymentOption"
+                              value="full"
+                              checked={paymentOption === 'full'}
+                              onChange={(e) => setPaymentOption(e.target.value as 'full')}
+                              className="w-4 h-4 text-purple-600"
+                            />
+                            <div className="flex-1">
+                              <div className="font-semibold text-dark">Pay Later (Recommended)</div>
+                              <div className="text-sm text-neutral-600">Complete booking now, pay via mobile money after confirmation</div>
+                            </div>
+                          </label>
+
+                          <label className="flex items-center gap-3 p-4 bg-white border-2 border-neutral-200 rounded-lg cursor-pointer hover:border-purple-300 transition-colors">
+                            <input
+                              type="radio"
+                              name="paymentOption"
+                              value="deposit"
+                              checked={paymentOption === 'deposit'}
+                              onChange={(e) => setPaymentOption(e.target.value as 'deposit')}
+                              className="w-4 h-4 text-purple-600"
+                            />
+                            <div className="flex-1">
+                              <div className="font-semibold text-dark">I&apos;ve Already Paid</div>
+                              <div className="text-sm text-neutral-600">Record your payment (full or deposit)</div>
+                            </div>
+                          </label>
+                        </div>
+
+                        {/* Payment Details Form (shown only if deposit selected) */}
+                        {paymentOption === 'deposit' && (
+                          <div className="space-y-4 p-4 bg-white rounded-lg border border-purple-200">
+                            <div>
+                              <label className="block text-sm font-medium text-dark mb-2">
+                                Amount Paid (GH₵) *
+                              </label>
+                              <input
+                                type="number"
+                                value={depositAmount}
+                                onChange={(e) => setDepositAmount(e.target.value)}
+                                className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                                placeholder="Enter amount (e.g., 500)"
+                                min="0"
+                                max={pricing?.total || 0}
+                                required
+                              />
+                              <p className="text-xs text-neutral-500 mt-1">
+                                Total: GH₵{pricing?.total?.toLocaleString() || 0}
+                              </p>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-dark mb-2">
+                                Payment Method *
+                              </label>
+                              <select
+                                value={paymentMethod}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                                required
+                              >
+                                <option value="">Select payment method</option>
+                                <option value="telecel">Telecel Cash (Mobile Money)</option>
+                                <option value="mtn">MTN Mobile Money</option>
+                                <option value="vodafone">Vodafone Cash</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="cash">Cash</option>
+                                <option value="card">Credit/Debit Card</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-dark mb-2">
+                                Transaction Reference (Optional)
+                              </label>
+                              <input
+                                type="text"
+                                value={paymentReference}
+                                onChange={(e) => setPaymentReference(e.target.value)}
+                                className="w-full border border-neutral-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                                placeholder="e.g., MP12345678 or transaction ID"
+                              />
+                            </div>
+
+                            {depositAmount && pricing?.total && parseFloat(depositAmount) < pricing.total && (
+                              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                <p className="text-sm text-amber-800">
+                                  <span className="font-semibold">Balance Due:</span> GH₵{(pricing.total - parseFloat(depositAmount)).toLocaleString()}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

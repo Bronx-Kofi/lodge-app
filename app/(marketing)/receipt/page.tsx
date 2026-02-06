@@ -97,6 +97,7 @@ function ReceiptContent() {
   const pricePerNight =
     booking.roomPricePerNight ||
     booking.room?.finalPrice ||
+    booking.room?.price ||
     (computedTotal && nights > 0 && booking.numberOfRooms > 0
       ? Math.round(computedTotal / nights / booking.numberOfRooms)
       : 0);
@@ -350,12 +351,12 @@ function ReceiptContent() {
                         ? `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
                         : `${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`
                     ) : (
-                      'Invalid booking data'
+                      <span className="text-amber-600">Price not set. Please contact us.</span>
                     )}
                   </div>
                 </div>
                 <div className="font-semibold text-dark">
-                  {hasValidDates && computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-red-600 text-sm">Invalid</span>}
+                  {hasValidDates && computedTotal != null && computedTotal > 0 ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-amber-600 text-sm">TBD</span>}
                 </div>
               </div>
               
@@ -363,7 +364,7 @@ function ReceiptContent() {
                 <div className="flex justify-between items-center">
                   <div className="text-lg font-bold text-dark">Total Amount</div>
                   <div className="text-2xl font-bold text-orange">
-                    {hasValidDates && computedTotal != null ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-red-600">Invalid Booking</span>}
+                    {hasValidDates && computedTotal != null && computedTotal > 0 ? `GH₵${computedTotal.toLocaleString()}` : <span className="text-amber-600">To Be Determined</span>}
                   </div>
                 </div>
 

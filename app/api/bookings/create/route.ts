@@ -28,6 +28,10 @@ export async function POST(request: NextRequest) {
       roomPricePerNight,
       nationality,
       passportNumber,
+      paymentStatus,
+      amountPaid,
+      paymentMethod,
+      paymentReference,
     } = bookingData;
 
     // Validate required fields
@@ -160,10 +164,13 @@ export async function POST(request: NextRequest) {
       numberOfRooms: numberOfRooms || 1,
       adults: adults || 1,
       children: children || 0,
-      roomPricePerNight: roomPricePerNight || null, // Store nightly rate for receipt generation
+      roomPricePerNight: roomPricePerNight || null,
       totalPrice,
       status: 'pending',
-      paymentStatus: 'pending',
+      paymentStatus: paymentStatus || 'pending',
+      amountPaid: amountPaid || 0,
+      paymentMethod: paymentMethod || '',
+      paymentReference: paymentReference || '',
       specialRequests: specialRequests || '',
       nationality: nationality || '',
       passportNumber: passportNumber || '',
