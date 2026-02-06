@@ -68,10 +68,10 @@ export function RoomCard({ room }: RoomCardProps) {
                 )}
 
                 <div className="flex items-baseline gap-1 mt-1">
-                    {room.priceMin && room.priceMax ? (
+                    {room.price ? (
                         <>
                             <span className="font-bold text-lg text-dark">
-                                GH₵{room.priceMin} - GH₵{room.priceMax}
+                                GH₵{room.price}
                             </span>
                             <span className="text-dark-light text-sm">/night</span>
                         </>

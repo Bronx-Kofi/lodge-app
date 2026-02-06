@@ -11,13 +11,12 @@ import { SimpleDatePicker } from "./SimpleDatePicker";
 interface BookingWidgetProps {
     roomTitle: string;
     basePrice: number;
-    priceMax?: number;
     capacity: number;
     whatsappNumber: string;
     cancellationPolicy?: string;
 }
 
-export function BookingWidget({ roomTitle, basePrice, priceMax, capacity, whatsappNumber, cancellationPolicy }: BookingWidgetProps) {
+export function BookingWidget({ roomTitle, basePrice, capacity, whatsappNumber, cancellationPolicy }: BookingWidgetProps) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [guests, setGuests] = useState(2);
     const [rooms, setRooms] = useState(1); // Number of rooms to book
@@ -35,7 +34,7 @@ export function BookingWidget({ roomTitle, basePrice, priceMax, capacity, whatsa
 
     // Calculate price range for total
     const minTotalPrice = nights * basePrice * rooms;
-    const maxTotalPrice = priceMax ? nights * priceMax * rooms : minTotalPrice;
+    const maxTotalPrice = minTotalPrice; // Fixed pricing, no range
 
     const handleWhatsAppRedirect = () => {
         setIsRedirecting(true);
@@ -53,13 +52,8 @@ export function BookingWidget({ roomTitle, basePrice, priceMax, capacity, whatsa
         
         if (nights > 0) {
             message += `Nights: ${nights}\n`;
-            if (priceMax && priceMax !== basePrice) {
-                message += `Price Range: GHS ${basePrice} - ${priceMax} per room per night\n`;
-                message += `Estimated Total: GHS ${minTotalPrice} - ${maxTotalPrice} (${rooms} ${rooms > 1 ? 'rooms' : 'room'} x ${nights} ${nights > 1 ? 'nights' : 'night'})\n`;
-            } else {
-                message += `Price per room per night: GHS ${basePrice}\n`;
-                message += `Total Price: GHS ${minTotalPrice} (${rooms} ${rooms > 1 ? 'rooms' : 'room'} x ${nights} ${nights > 1 ? 'nights' : 'night'})\n`;
-            }
+            message += `Price per room per night: GHS ${basePrice}\n`;
+            message += `Total Price: GHS ${minTotalPrice} (${rooms} ${rooms > 1 ? 'rooms' : 'room'} x ${nights} ${nights > 1 ? 'nights' : 'night'})\n`;
         }
         
         message += `Total Guests: ${guests} ${guests > 1 ? 'guests' : 'guest'}\n\n`;
@@ -244,41 +238,20 @@ export function BookingWidget({ roomTitle, basePrice, priceMax, capacity, whatsa
                 {nights > 0 && (
                     <div className="pt-4 border-t border-neutral-100 space-y-2">
                         <div className="flex items-center justify-between text-sm text-neutral-600">
-                            {priceMax && priceMax !== basePrice ? (
-                                <>
-                                    <span>GH₵{basePrice}-{priceMax} x {nights} {nights > 1 ? 'nights' : 'night'}</span>
-                                    <span>GH₵{basePrice * nights}-{priceMax * nights}</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>GH₵{basePrice} x {nights} {nights > 1 ? 'nights' : 'night'}</span>
-                                    <span>GH₵{basePrice * nights}</span>
-                                </>
-                            )}
+                            <span>GH₵{basePrice} x {nights} {nights > 1 ? 'nights' : 'night'}</span>
+                            <span>GH₵{basePrice * nights}</span>
                         </div>
                         {rooms > 1 && (
                             <div className="flex items-center justify-between text-sm text-neutral-600">
                                 <span>x {rooms} rooms</span>
-                                {priceMax && priceMax !== basePrice ? (
-                                    <span>GH₵{minTotalPrice}-{maxTotalPrice}</span>
-                                ) : (
-                                    <span>GH₵{minTotalPrice}</span>
-                                )}
+                                <span>GH₵{minTotalPrice}</span>
                             </div>
                         )}
                         <div className="flex items-center justify-between pt-2 border-t border-neutral-100">
-                            <span className="font-semibold text-neutral-800">
-                                {priceMax && priceMax !== basePrice ? 'Estimated Total' : 'Total'}
+                            <span className="font-semibold text-neutral-800">Total</span>
+                            <span className="text-lg font-serif font-medium text-terracotta">
+                                GH₵{minTotalPrice}
                             </span>
-                            {priceMax && priceMax !== basePrice ? (
-                                <span className="text-lg font-serif font-medium text-terracotta">
-                                    GH₵{minTotalPrice} - GH₵{maxTotalPrice}
-                                </span>
-                            ) : (
-                                <span className="text-lg font-serif font-medium text-terracotta">
-                                    GH₵{minTotalPrice}
-                                </span>
-                            )}
                         </div>
                     </div>
                 )}

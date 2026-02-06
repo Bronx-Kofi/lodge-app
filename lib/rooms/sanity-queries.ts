@@ -8,8 +8,7 @@ export interface Room {
   slug: { current: string };
   tagline: string;
   capacity: number;
-  priceMin: number;
-  priceMax: number;
+  price: number;
   intro: string;
   description: any[]; // Block content
   amenities: string[];
@@ -56,14 +55,13 @@ export function getImageUrl(imageRef: any): string {
   return url || "/hero-fallback.jpg";
 }
 
-const roomsQuery = groq`*[_type == "roomSimplified"] | order(priceMin asc) {
+const roomsQuery = groq`*[_type == "roomSimplified"] | order(price asc) {
   _id,
   title,
   slug,
   tagline,
   capacity,
-  priceMin,
-  priceMax,
+  price,
   intro,
   description,
   amenities,
@@ -112,8 +110,7 @@ const roomBySlugQuery = groq`*[_type == "roomSimplified" && slug.current == $slu
   slug,
   tagline,
   capacity,
-  priceMin,
-  priceMax,
+  price,
   intro,
   description,
   amenities,
