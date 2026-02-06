@@ -87,20 +87,22 @@ function VisaReceiptContent() {
     );
   }
 
-  const checkInDate = new Date(booking.checkIn);
-  const checkOutDate = new Date(booking.checkOut);
+  const checkInDate = booking?.checkIn ? new Date(booking.checkIn) : new Date();
+  const checkOutDate = booking?.checkOut ? new Date(booking.checkOut) : new Date();
   const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
   
   // Validate dates
   const hasValidDates = checkOutDate > checkInDate && nights > 0;
   const issueDate = new Date();
 
-  // Use stored roomPricePerNight first, then try room.finalPrice, fallback to calculating from total
+  // Use stored roomPricePerNight first, then try room prices, fallback to calculating from total
   const pricePerNight =
-    booking.roomPricePerNight ||
-    booking.room?.finalPrice ||
-    (booking.totalPrice && nights > 0 && booking.numberOfRooms > 0
-      ? Math.round(booking.totalPrice / nights / booking.numberOfRooms)
+    booking?.roomPricePerNight ||
+    booking?.room?.receiptPrice ||
+    booking?.room?.price ||
+    booking?.room?.finalPrice ||
+    (booking?.totalPrice && nights > 0 && (booking?.numberOfRooms || 1) > 0
+      ? Math.round(booking.totalPrice / nights / (booking.numberOfRooms || 1))
       : 0);
 
   const formatDate = (date: Date) => {
