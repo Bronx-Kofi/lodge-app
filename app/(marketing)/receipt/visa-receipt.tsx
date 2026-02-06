@@ -371,8 +371,8 @@ function VisaReceiptContent() {
                     <div className="font-medium text-dark">Room Rate</div>
                     <div className="text-sm text-neutral-600">
                       {(() => {
-                        if (!hasValidDates) return 'Invalid booking dates';
-                        if (!pricePerNight || pricePerNight <= 0) return 'Invalid pricing';
+                        if (!hasValidDates) return <span className="text-amber-600">Please contact us for pricing</span>;
+                        if (!pricePerNight || pricePerNight <= 0) return <span className="text-amber-600">Price to be confirmed</span>;
                         if (booking.numberOfRooms > 1) {
                           return `${booking.numberOfRooms} ${booking.numberOfRooms === 1 ? 'room' : 'rooms'} × ${nights} ${nights === 1 ? 'night' : 'nights'} @ GH₵${pricePerNight.toLocaleString()}/night`;
                         } else {
@@ -382,9 +382,9 @@ function VisaReceiptContent() {
                     </div>
                   </div>
                   <div className="font-semibold text-dark">
-                    {hasValidDates && booking.totalPrice 
+                    {hasValidDates && booking.totalPrice && booking.totalPrice > 0
                       ? `GH₵ ${booking.totalPrice.toLocaleString()}`
-                      : <span className="text-red-600 text-sm">Invalid</span>
+                      : <span className="text-amber-600 text-sm">TBD</span>
                     }
                   </div>
                 </div>
@@ -450,7 +450,10 @@ function VisaReceiptContent() {
                   <div className="flex justify-between items-center pt-3 border-t-2 border-neutral-300">
                     <div className="font-bold text-dark text-lg">Total Amount</div>
                     <div className="font-bold text-dark text-lg">
-                      GH₵ {booking.totalPrice.toLocaleString()}
+                      {booking.totalPrice && booking.totalPrice > 0 
+                        ? `GH₵ ${booking.totalPrice.toLocaleString()}`
+                        : <span className="text-amber-600">To Be Determined</span>
+                      }
                     </div>
                   </div>
                 )}
